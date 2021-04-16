@@ -7,40 +7,42 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="patient")
+@Table(name = "patient")
 public class Patient {
 
-        @Id
-        @GeneratedValue
-        private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-        @Column(name="firstname",length=100)
-        @NotNull
-        private String firstName;
+    @Column(name = "firstname", length = 100)
+    @NotNull
+    private String firstName;
 
-        @Column(name="lastname",length=100)
-        @NotNull
-        private String lastName;
+    @Column(name = "lastname", length = 100)
+    @NotNull
+    private String lastName;
 
-        @NotNull
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        private LocalDate birthdate;
+    @Column(name = "address", length = 200)
+    private String address;
 
-        @Column(name="sex",length=1)
-        @NotNull
-        private String sex;
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate birthdate;
 
-        @Column(name="address",length=200)
-        private String address;
+    @Column(name = "phone", length = 12)
+    private String phone;
 
-        @Column(name="phone",length=12)
-        private String phone;
+    @Column(name = "sex", length = 1)
+    @NotNull
+    private String sex;
 
-        public Patient() {
 
-        }
+    public Patient() {
+        super();
+    }
 
     public Patient(long id, String firstName, String lastName, LocalDate birthdate, String sex, String address, String phone) {
+        super();
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
