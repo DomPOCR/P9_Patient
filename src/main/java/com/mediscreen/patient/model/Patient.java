@@ -52,6 +52,19 @@ public class Patient {
         this.phone = phone;
     }
 
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address='" + address + '\'' +
+                ", birthdate=" + birthdate +
+                ", phone='" + phone + '\'' +
+                ", sex='" + sex + '\'' +
+                '}';
+    }
+
     public long getId() {
         return id;
     }

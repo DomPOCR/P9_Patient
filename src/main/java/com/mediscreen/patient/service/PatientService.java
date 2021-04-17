@@ -12,4 +12,5 @@ public interface PatientService {
      */
     public List<Patient> findAll();
 
+    boolean addPatient(Patient newPatient) throws Exception;
 }
