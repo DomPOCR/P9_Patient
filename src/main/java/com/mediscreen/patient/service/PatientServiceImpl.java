@@ -36,7 +36,6 @@ public class PatientServiceImpl implements PatientService {
         if (patientDao.existsPatientByLastNameAndFirstNameAndBirthdate(newPatient.getLastName(),newPatient.getFirstName(),newPatient.getBirthdate())){
 
             String mess = String.format("Creation failed : this patient %s is already exist !!", newPatient.toString());
-            logger.info(mess);
             throw new DataAlreadyExistException(mess);
         }
         patientDao.save(newPatient);
