@@ -4,11 +4,12 @@ import com.sun.istack.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "patient")
-public class Patient {
+public class Patient  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +64,9 @@ public class Patient {
                 ", phone='" + phone + '\'' +
                 ", sex='" + sex + '\'' +
                 '}';
+    }
+
+    public Patient( String firstName, String lastName, LocalDate birthdate, String sex, String address, String phone) {
     }
 
     public long getId() {

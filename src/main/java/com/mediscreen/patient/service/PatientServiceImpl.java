@@ -25,7 +25,7 @@ public class PatientServiceImpl implements PatientService {
 
         logger.info("listPatients start");
         List<Patient> patientList = patientDao.findAll();
-        logger.info("Nb of Patients found :"+patientList.size());
+        logger.info("Nb of Patients found :" + patientList.size());
         return patientList;
     }
 
@@ -33,7 +33,7 @@ public class PatientServiceImpl implements PatientService {
     public boolean addPatient(Patient newPatient) throws Exception {
 
 
-        if (patientDao.existsPatientByLastNameAndFirstNameAndBirthdate(newPatient.getLastName(),newPatient.getFirstName(),newPatient.getBirthdate())){
+        if (patientDao.existsPatientByLastNameAndFirstNameAndBirthdate(newPatient.getLastName(), newPatient.getFirstName(), newPatient.getBirthdate())) {
 
             String mess = String.format("Creation failed : this patient %s is already exist !!", newPatient.toString());
             throw new DataAlreadyExistException(mess);
