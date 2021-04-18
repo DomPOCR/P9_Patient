@@ -47,4 +47,14 @@ public class PatientController {
 
     }
 
+    /*---------------------------  PUT  ------------------------------*/
+
+    // Mise à jour Patient
+
+    @PutMapping("updatePatient")
+    public ResponseEntity updatePatient(@RequestBody Patient patient) throws Exception {
+
+        patientService.updatePatient(patient);
+        return new ResponseEntity(patient,HttpStatus.OK);
+    }
 }

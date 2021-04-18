@@ -85,12 +85,23 @@ public class PatientControllerTest {
 
     }
 
-    @Test
-    public void AddPatientControllerTest() throws Exception {
+    @Test // TODO null dans les valeurs de patient
+    public void addPatientControllerTest() throws Exception {
 
         // GIVEN
 
-        Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, sexTest, addressTest, phoneTest);
+        //Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, sexTest, addressTest, phoneTest);
+
+        Patient patientTest = new Patient();
+
+        patientTest.setId(0);
+        patientTest.setFirstName(firstNameTest);
+        patientTest.setLastName(lastNameTest);
+        patientTest.setBirthdate(birthdateLocal);
+        patientTest.setSex(sexTest);
+        patientTest.setAddress(addressTest);
+        patientTest.setPhone(phoneTest);
+
         Mockito.when(patientDao.existsPatientByLastNameAndFirstNameAndBirthdate(lastNameTest, firstNameTest, birthdateLocal)).thenReturn(false);
 
         // WHEN
@@ -104,6 +115,37 @@ public class PatientControllerTest {
                 .andExpect(status().isCreated());
 
     }
+
+    @Test // TODO null dans les valeurs de patient
+    public void updatePatientControllerTest() throws Exception {
+
+        // GIVEN
+
+        Patient patientTest = new Patient();
+        Patient patientTest2 = new Patient();
+
+        patientTest.setId(0);
+        patientTest.setFirstName(firstNameTest);
+        patientTest.setLastName(lastNameTest);
+        patientTest.setBirthdate(birthdateLocal);
+        patientTest.setSex(sexTest);
+        patientTest.setAddress(addressTest);
+        patientTest.setPhone(phoneTest);
+
+        Mockito.when(patientDao.findById(patientTest.getId())).thenReturn(patientTest2);
+
+        // WHEN
+        // THEN
+
+        mockMvc.perform(put("/updatePatient")
+                .content(asJsonString(patientTest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
+
 
 
     public static String asJsonString(final Object obj) {

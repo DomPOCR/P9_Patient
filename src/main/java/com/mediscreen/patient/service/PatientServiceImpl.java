@@ -1,9 +1,9 @@
 package com.mediscreen.patient.service;
 
+import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.exceptions.DataAlreadyExistException;
 import com.mediscreen.patient.exceptions.DataMissingException;
 import com.mediscreen.patient.model.Patient;
-import com.mediscreen.patient.dao.PatientDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +32,26 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public boolean addPatient(Patient newPatient) throws Exception {
 
-
         if (patientDao.existsPatientByLastNameAndFirstNameAndBirthdate(newPatient.getLastName(), newPatient.getFirstName(), newPatient.getBirthdate())) {
 
             String mess = String.format("Creation failed : this patient %s is already exist !!", newPatient.toString());
             throw new DataAlreadyExistException(mess);
         }
         patientDao.save(newPatient);
-        logger.info("Add patient Ok " + newPatient.toString());
+        logger.info("Add patient OK " + newPatient.toString());
+        return true;
+    }
+
+    @Override
+    public boolean updatePatient(Patient patient) throws Exception {
+
+        if (patientDao.findById(patient.getId()) == null) {
+
+            String mess = String.format("Update failed : this patient %s does not exist !!", patient.toString());
+            throw new DataMissingException(mess);
+        }
+        patientDao.save(patient);
+        logger.info("Update patient OK " + patient.toString());
         return true;
     }
 }

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Repository
 public interface PatientDao extends JpaRepository<Patient, Integer> {
 
-    Patient findById (long id);
-    boolean existsPatientByLastNameAndFirstNameAndBirthdate(String lastname, String firstname, LocalDate birthdate);
+   boolean existsPatientByLastNameAndFirstNameAndBirthdate(String lastname, String firstname, LocalDate birthdate);
 
+    Patient findById(long id);
 }
