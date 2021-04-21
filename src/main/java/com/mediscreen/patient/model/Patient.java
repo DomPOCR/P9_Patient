@@ -4,43 +4,46 @@ import com.sun.istack.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="patient")
-public class Patient {
+@Table(name = "patient")
+public class Patient  {
 
-        @Id
-        @GeneratedValue
-        private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-        @Column(name="firstname",length=100)
-        @NotNull
-        private String firstName;
+    @Column(name = "firstname", length = 100)
+    @NotNull
+    private String firstName;
 
-        @Column(name="lastname",length=100)
-        @NotNull
-        private String lastName;
+    @Column(name = "lastname", length = 100)
+    @NotNull
+    private String lastName;
 
-        @NotNull
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        private LocalDate birthdate;
+    @Column(name = "address", length = 200)
+    private String address;
 
-        @Column(name="sex",length=1)
-        @NotNull
-        private String sex;
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate birthdate;
 
-        @Column(name="address",length=200)
-        private String address;
+    @Column(name = "phone", length = 12)
+    private String phone;
 
-        @Column(name="phone",length=12)
-        private String phone;
+    @Column(name = "sex", length = 1)
+    @NotNull
+    private String sex;
 
-        public Patient() {
 
-        }
+    public Patient() {
+        super();
+    }
 
     public Patient(long id, String firstName, String lastName, LocalDate birthdate, String sex, String address, String phone) {
+        super();
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,6 +51,22 @@ public class Patient {
         this.sex = sex;
         this.address = address;
         this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address='" + address + '\'' +
+                ", birthdate=" + birthdate +
+                ", phone='" + phone + '\'' +
+                ", sex='" + sex + '\'' +
+                '}';
+    }
+
+    public Patient( String firstName, String lastName, LocalDate birthdate, String sex, String address, String phone) {
     }
 
     public long getId() {
