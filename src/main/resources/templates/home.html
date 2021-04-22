@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title> Mediscreen App </title>
+    <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body>
+<div class="row">
+    <div class="col-6">
+        <h3> WELCOME TO MEDISCREEN HOME PAGE </h3>
+        <p>
+            <a href="/patient/list">Patient list</a>&nbsp
+        </p>
+
+    </div>
+</div>
+<img th:src="@{/images/logo.png}">
+<h3> USER MANAGEMENT </h3>
+<p>
+    <a href="/login">Login</a> or create one <a href="/user/list">User management</a>
+</p>
+</body>
+</html>

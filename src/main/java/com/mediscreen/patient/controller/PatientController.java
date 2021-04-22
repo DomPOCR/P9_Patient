@@ -1,20 +1,25 @@
 package com.mediscreen.patient.controller;
 
+import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.service.PatientService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class PatientController {
 
     @Autowired
     private PatientService patientService;
+    @Autowired
+    private PatientDao patientDao;
 
     /*---------------------------  GET  ------------------------------*/
 
@@ -23,11 +28,15 @@ public class PatientController {
      * get patient list
      * @return patients list
      */
-    @GetMapping(value = "Patients")
+    @GetMapping(value = "patient/list")
     @ResponseStatus(HttpStatus.OK)
-    public List<Patient> listPatients() {
-        return patientService.findAll();
+    public String listPatient(Model model) {
+       model.addAttribute("patient",patientDao.findAll());
+       return "patient/list";
     }
+   /* public List<Patient> listPatients() {
+        return patientService.findAll();
+    }*/
 
 
     /*---------------------------  POST  -----------------------------*/
@@ -39,7 +48,7 @@ public class PatientController {
      * @return patient created
      * @throws Exception
      */
-    @PostMapping(value = "addPatient")
+    @PostMapping(value = "patient/add")
     public ResponseEntity addPatient(@RequestBody Patient newPatient) throws Exception {
 
         patientService.addPatient(newPatient);
@@ -51,7 +60,7 @@ public class PatientController {
 
     // Mise à jour Patient
 
-    @PutMapping("updatePatient")
+    @PutMapping("patient/update")
     public ResponseEntity updatePatient(@RequestBody Patient patient) throws Exception {
 
         patientService.updatePatient(patient);
