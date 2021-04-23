@@ -7,17 +7,23 @@
 <body>
 <div class="row">
     <div class="col-6">
-        <h3> WELCOME TO MEDISCREEN HOME PAGE </h3>
+        <h2> WELCOME TO MEDISCREEN HOME PAGE </h2>
+        </p>
+        <img th:src="@{/images/logo.png}">
         <p>
+        <h3> USER MANAGEMENT (ADMIN only) </h3>
+        <p>
+            <a href="/user/list">User management</a>
+        </p>
+        <p>
+        <h3> VIEW PATIENTS </h3>
             <a href="/patient/list">Patient list</a>&nbsp
         </p>
 
+
     </div>
 </div>
-<img th:src="@{/images/logo.png}">
-<h3> USER MANAGEMENT </h3>
-<p>
-    <a href="/login">Login</a> or create one <a href="/user/list">User management</a>
-</p>
+
+
 </body>
 </html>

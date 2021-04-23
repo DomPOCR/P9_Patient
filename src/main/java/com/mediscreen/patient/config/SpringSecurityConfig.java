@@ -19,31 +19,30 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     private MyUserDetailsService myUserDetailsService;
-
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    /*
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/patient/**")
-                .hasAnyAuthority("ADMIN", "USER")
-                .antMatchers("/user/**").hasAnyAuthority("ADMIN").and().formLogin()
-                //.antMatchers("/user/**").permitAll().and().formLogin() // login
-                // configuration
-                .defaultSuccessUrl("/patient/")
-                .and().logout() // logout configuration
-                .logoutUrl("/app-logout").logoutSuccessUrl("/").and().exceptionHandling() // exception handling
-                // configuration
-                .accessDeniedPage("/app/error");*/
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        auth.inMemoryAuthentication()
-                .withUser("domp")
-                .password(encoder.encode("secret"))
-                .roles("ADMIN");
+
+        // Disable CSRF (cross site request forgery)
+        http.csrf().disable();
+
+        // Autorisations avec rôles
+        http.authorizeRequests()
+                //.antMatchers("/bidList/**", "/rating/**", "/ruleName/**", "/trade/**", "/curvePoint/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers("/user/**").hasAnyAuthority("ADMIN")
+                .antMatchers("/*").hasAnyAuthority("ADMIN", "USER")
+                //.antMatchers("/user/**").permitAll()
+                .and().formLogin()  //login configuration
+                .defaultSuccessUrl("/home")
+                .and().logout()    //logout configuration
+                .logoutUrl("/app-logout")
+                .logoutSuccessUrl("/")
+                .and().exceptionHandling()
+                .accessDeniedPage("/403");
+
+
     }
 
     @Autowired
