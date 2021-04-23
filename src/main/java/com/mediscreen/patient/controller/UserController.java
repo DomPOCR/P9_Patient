@@ -53,6 +53,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public String listUser(Model model) {
         model.addAttribute("userList", userDao.findAll());
+        logger.info("/user/list : OK");
         return "user/list";
     }
 
@@ -75,7 +76,7 @@ public class UserController {
             logger.info("user/validate : ended for user : " + user.toString());
             return "redirect:/user/list";
         }
-        logger.info("user/validate : error for user : " + user.toString());
+        logger.error("user/validate : error for user : " + user.toString());
         return "user/add";
     }
 
@@ -86,7 +87,7 @@ public class UserController {
     @GetMapping("user/add")
     @ResponseStatus(HttpStatus.CREATED)
     public String addUser(User user) {
-        logger.info("GET /user/add : OK");
+        logger.info("GET /user/add : Start");
         return "user/add";
     }
 
@@ -126,7 +127,7 @@ public class UserController {
         if (result.hasErrors()) {
             String error = result.getFieldErrors().get(0).getDefaultMessage();
             String field = result.getFieldErrors().get(0).getField();
-            logger.info("trade/update : error for user : " + user.toString() + " : " + field + " " + error);
+            logger.error("trade/update : error for user : " + user.toString() + " : " + field + " " + error);
             return "user/update";
         }
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8"/>
   <title> Mediscreen App </title>
-  <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css">
+  <link href="../../static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="container">
@@ -12,18 +12,19 @@
     <div class="col-6">
     </div>
     <div class="col-6 text-right">
-      <a href="/">Home</a>&nbsp;
+      <a href="/home">Home</a>&nbsp
     </div>
   </div>
   <div class="row"><h2>Patient List</h2></div>
   <div class="row">
-    <a href="/patient/add" class="btn btn-primary btn-sm">Add New</a>
-    <table class="table table-bordered">
+    <a class="btn btn-primary btn-sm" href="/patient/add">Add New</a>
+    <p></p>
+    <table border="1">
       <thead>
       <tr>
         <th>Id</th>
         <th>Firstname</th>
-        <th>Lastname</th>
+        <th>lastName</th>
         <th>Date of birth</th>
         <th>Gender</th>
         <th>Address</th>
@@ -31,17 +32,17 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="patient : ${patients}">
+      <tr th:each="patient, iStat : ${patientList}" th:style="${iStat.odd}? 'font-weight: normal;'">
         <td style="width: 10%" th:text="${patient.id}"></td>
-        <td th:text="${patient.firstname}"></td>
-        <td th:text="${patient.lastname}"></td>
-        <td th:text="${patient.birthDate}"></td>
-        <td th:text="${patient.genre}"></td>
+        <td th:text="${patient.firstName}"></td>
+        <td th:text="${patient.lastName}"></td>
+        <td th:text="${patient.birthdate}"></td>
+        <td th:text="${patient.sex}"></td>
         <td th:text="${patient.address}"></td>
-        <td th:text="${patient.phoneNumber}"></td>
-        <td style="width: 15%" class="text-center">
+        <td th:text="${patient.phone}"></td>
+        <td class="text-center" style="width: 15%">
           <a th:href="@{/patient/update/{id}(id=${patient.id})}">Edit</a>&nbsp;|&nbsp;
-          <a th:href="@{/patient/delete/{id}(id=${patient.id})}" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+          <a onclick="return confirm('Are you sure you want to delete this item?')" th:href="@{/patient/delete/{id}(id=${patient.id})}">Delete</a>
         </td>
       </tr>
       </tbody>
