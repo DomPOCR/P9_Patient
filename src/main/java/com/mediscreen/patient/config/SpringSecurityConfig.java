@@ -30,16 +30,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Autorisations avec rôles
         http.authorizeRequests()
-                //.antMatchers("/bidList/**", "/rating/**", "/ruleName/**", "/trade/**", "/curvePoint/**").hasAnyAuthority("ADMIN", "USER")
                 .antMatchers("/user/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/*").hasAnyAuthority("ADMIN", "USER")
-                //.antMatchers("/user/**").permitAll()
-                .and().formLogin()  //login configuration
+            .and()
+                .formLogin()  //login configuration
                 .defaultSuccessUrl("/home")
-                .and().logout()    //logout configuration
-                .logoutUrl("/app-logout")
-                .logoutSuccessUrl("/")
-                .and().exceptionHandling()
+            .and()
+                .logout()    //logout configuration
+                .logoutSuccessUrl("/login")
+            .and()
+                .exceptionHandling()
                 .accessDeniedPage("/403");
 
 

@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title> Mediscreen App </title>
     <link rel="stylesheet" href="/static/css/styles.css"/>
 </head>
 <body>
+<div sec:authorize="isAuthenticated()">
+    <a href="javascript: document.logoutForm.submit()" class="dropdown-toggle">Sign out</a>
+    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <input hidden type="submit" value="Sign Out" />
+    </form>
+</div>
 <div class="row">
     <div class="col-6">
         <h2> WELCOME TO MEDISCREEN HOME PAGE </h2>
+
         </p>
         <img th:src="@{/images/logo.png}">
         <p>
