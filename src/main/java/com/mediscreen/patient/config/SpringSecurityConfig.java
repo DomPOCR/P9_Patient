@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +24,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MyUserDetailsService myUserDetailsService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -32,16 +35,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/user/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/*").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers("/logout/**").permitAll()
+                .antMatchers("/login/**").permitAll()
             .and()
                 .formLogin()  //login configuration
                 .defaultSuccessUrl("/home")
             .and()
                 .logout()    //logout configuration
                 .logoutSuccessUrl("/login")
+                .addLogoutHandler(new SecurityContextLogoutHandler())
             .and()
-                .exceptionHandling()
+                .exceptionHandling() // exception handling
                 .accessDeniedPage("/403");
-
 
     }
 
