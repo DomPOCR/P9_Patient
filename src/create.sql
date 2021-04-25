@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS p9_db.patient (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    address VARCHAR(200) NOT NULL,
+    birthdate DATE NOT NULL,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
+    phone VARCHAR(12),
+    genre VARCHAR(1) NOT NULL,
+    PRIMARY KEY (id)
+    )  ENGINE=INNODB
+
+CREATE TABLE IF NOT EXISTS p9_db.user (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    username VARCHAR(125) NOT NULL,
+    password VARCHAR(125) NOT NULL,
+    role VARCHAR(125) NOT NULL,
+    PRIMARY KEY (id)
+    )  ENGINE=INNODB

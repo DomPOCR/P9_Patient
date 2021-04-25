@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title> Mediscreen App </title>
+  <link href="../../static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+    </div>
+    <div class="col-6 text-right">
+      <a href="/home">Home</a>&nbsp
+    </div>
+  </div>
+  <div class="row"><h2>Patient List</h2></div>
+  <div class="row">
+    <a class="btn btn-primary btn-sm" href="/patient/add">Add New</a>
+    <p></p>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>firstName</th>
+        <th>lastName</th>
+        <th>Date of birth</th>
+        <th>Gender</th>
+        <th>Address</th>
+        <th>Phone</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="patient, iStat : ${patientList}" th:style="${iStat.odd}? 'font-weight: normal;'">
+        <td style="width: 10%" th:text="${patient.id}"></td>
+        <td th:text="${patient.firstName}"></td>
+        <td th:text="${patient.lastName}"></td>
+        <td th:text="${patient.birthdate}"></td>
+        <td th:text="${patient.genre}"></td>
+        <td th:text="${patient.address}"></td>
+        <td th:text="${patient.phone}"></td>
+        <td class="text-center" style="width: 15%">
+          <a th:href="@{/patient/update/{id}(id=${patient.id})}">Edit</a>&nbsp;|&nbsp;
+          <a onclick="return confirm('Are you sure you want to delete this item?')" th:href="@{/patient/delete/{id}(id=${patient.id})}">Delete</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

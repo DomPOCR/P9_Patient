@@ -4,7 +4,6 @@ import com.sun.istack.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -33,22 +32,22 @@ public class Patient  {
     @Column(name = "phone", length = 12)
     private String phone;
 
-    @Column(name = "sex", length = 1)
+    @Column(name = "genre", length = 1)
     @NotNull
-    private String sex;
+    private String genre;
 
 
     public Patient() {
         super();
     }
 
-    public Patient(long id, String firstName, String lastName, LocalDate birthdate, String sex, String address, String phone) {
+    public Patient(long id, String firstName, String lastName, LocalDate birthdate, String genre, String address, String phone) {
         super();
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
-        this.sex = sex;
+        this.genre = genre;
         this.address = address;
         this.phone = phone;
     }
@@ -62,11 +61,11 @@ public class Patient  {
                 ", address='" + address + '\'' +
                 ", birthdate=" + birthdate +
                 ", phone='" + phone + '\'' +
-                ", sex='" + sex + '\'' +
+                ", genre='" + genre + '\'' +
                 '}';
     }
 
-    public Patient( String firstName, String lastName, LocalDate birthdate, String sex, String address, String phone) {
+    public Patient(String firstName, String lastName, LocalDate birthdate, String genre, String address, String phone) {
     }
 
     public long getId() {
@@ -101,12 +100,12 @@ public class Patient  {
         this.birthdate = birthdate;
     }
 
-    public String getSex() {
-        return sex;
+    public String getGenre() {
+        return genre;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public String getAddress() {
