@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS p9_db.patient (
     firstname VARCHAR(100) NOT NULL,
     lastname VARCHAR(100) NOT NULL,
     phone VARCHAR(12),
-    sex VARCHAR(1) NOT NULL,
+    genre VARCHAR(1) NOT NULL,
     PRIMARY KEY (id)
     )  ENGINE=INNODB
 

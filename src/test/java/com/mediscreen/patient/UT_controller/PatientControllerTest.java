@@ -1,54 +1,71 @@
 package com.mediscreen.patient.UT_controller;
 
 
+import com.fasterxml.jackson.databind.BeanProperty;
 import com.mediscreen.patient.controller.PatientController;
 import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
-import com.mediscreen.patient.service.PatientService;
-
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.mockito.Mockito;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import org.mockito.Mockito;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(PatientController.class)
 public class PatientControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private PatientService patientService;
-
     @MockBean
     private PatientDao patientDao;
 
+    @Configuration
+    static class ContextConfiguration {
+        @Bean
+        public PatientController getPatientController() {
+            return new PatientController();
+        }
+    }
     // Constantes pour le jeu de test
 
     String firstNameTest = "James";
+    String firstNameTestEmpty = null;
+
     String lastNameTest = "Bond";
     String birthdateTest = "01/01/1963";
     LocalDate birthdateLocal;
-    String sexTest = "M";
+    String genreTest = "M";
     String addressTest = "10 downing St";
     String phoneTest = "0123456789";
 
@@ -62,97 +79,87 @@ public class PatientControllerTest {
         birthdateLocal = LocalDate.parse(birthdateTest, df);
     }
 
+
+    /* Show the list of Patients */
+
     @Test
-    public void getAllPatientsControllerTest() throws Exception {
+    public void listPatientTest() throws Exception {
 
         List<Patient> patientList = new ArrayList<>();
-        Patient patientTest = new Patient(99, firstNameTest, lastNameTest, birthdateLocal, sexTest, addressTest, phoneTest);
+        Patient patientTest = new Patient(99, firstNameTest, lastNameTest, birthdateLocal, genreTest, addressTest, phoneTest);
 
         // GIVEN
         patientList.add(patientTest);
-        Mockito.when(patientService.findAll()).thenReturn(patientList);
+        Mockito.when(patientDao.findAll()).thenReturn(patientList);
 
         // WHEN
         // THEN
 
-        mockMvc.perform(get("/Patients")
+        mockMvc.perform(get("/patient/list")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$..firstName").value(firstNameTest))
-                .andExpect(MockMvcResultMatchers.jsonPath("$..lastName").value(lastNameTest))
+                .andExpect(view().name("patient/list"))
                 .andExpect(status().isOk());
-
+        Mockito.verify(patientDao,Mockito.times(1)).findAll();
     }
 
-    @Test // TODO null dans les valeurs de patient
-    public void addPatientControllerTest() throws Exception {
+    /* Display patient adding form */
+
+    @Test
+    public void addPatientTest() throws Exception {
 
         // GIVEN
-
-        //Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, sexTest, addressTest, phoneTest);
-
-        Patient patientTest = new Patient();
-
-        patientTest.setId(0);
-        patientTest.setFirstName(firstNameTest);
-        patientTest.setLastName(lastNameTest);
-        patientTest.setBirthdate(birthdateLocal);
-        patientTest.setSex(sexTest);
-        patientTest.setAddress(addressTest);
-        patientTest.setPhone(phoneTest);
-
-        Mockito.when(patientDao.existsPatientByLastNameAndFirstNameAndBirthdate(lastNameTest, firstNameTest, birthdateLocal)).thenReturn(false);
-
         // WHEN
-        // THEN
+        // THEN return the add page
 
-        mockMvc.perform(post("/addPatient")
-                .content(asJsonString(patientTest))
+        mockMvc.perform(get("/patient/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isCreated());
-
+                .andExpect(view().name("patient/add"))
+                .andExpect(status().isOk());
     }
 
-    @Test // TODO null dans les valeurs de patient
-    public void updatePatientControllerTest() throws Exception {
+    @Test
+    public void validatePatientReturnOKTest() throws Exception {
+
+       Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, genreTest, addressTest, phoneTest);
 
         // GIVEN
-
-        Patient patientTest = new Patient();
-        Patient patientTest2 = new Patient();
-
-        patientTest.setId(0);
-        patientTest.setFirstName(firstNameTest);
-        patientTest.setLastName(lastNameTest);
-        patientTest.setBirthdate(birthdateLocal);
-        patientTest.setSex(sexTest);
-        patientTest.setAddress(addressTest);
-        patientTest.setPhone(phoneTest);
-
-        Mockito.when(patientDao.findById(patientTest.getId())).thenReturn(patientTest2);
+       Mockito.when(patientDao.save(any(Patient.class))).thenReturn(patientTest);
+       Mockito.when(patientDao.findById(anyLong())).thenReturn(patientTest);
 
         // WHEN
-        // THEN
-
-        mockMvc.perform(put("/updatePatient")
-                .content(asJsonString(patientTest))
+        // THEN return the list page
+        this.mockMvc.perform(post("/patient/validate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .param("firstname", String.valueOf(firstNameTest))
+                .param("lastname", String.valueOf(lastNameTest))
+                .param("address", String.valueOf(addressTest))
+                .param("birthDate",String.valueOf(birthdateTest))
+                .param("genre", String.valueOf(genreTest)))
                 .andDo(print())
-                .andExpect(status().isOk());
-
+                .andExpect(view().name("redirect:/patient/list"))
+                .andExpect(status().is3xxRedirection());
     }
 
+    @Test
+    public void validatePatientReturnNotOKTest() throws Exception {
 
+        Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, genreTest, addressTest, phoneTest);
 
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        // GIVEN
+        Mockito.when(patientDao.findById(anyLong())).thenReturn(null);
+
+        // WHEN
+        // THEN return the list page
+
+            try {
+                this.mockMvc.perform(post("/patient/validate"));
+           } catch (Exception e) {
+                assertEquals(e.getMessage(),"/patient/validate : KO");
+            }
     }
 }
