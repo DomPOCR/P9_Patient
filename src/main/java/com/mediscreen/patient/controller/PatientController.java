@@ -107,7 +107,7 @@ public class PatientController {
     @PostMapping("/patient/update/{id}")
     public String updatePatient(@PathVariable("id") Long id, @Valid Patient patient, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            logger.error("POST /patient/update : " + result.getAllErrors());
+            logger.error("POST /patient/update : KO " + result.getAllErrors());
             return "patient/update";
         }
 

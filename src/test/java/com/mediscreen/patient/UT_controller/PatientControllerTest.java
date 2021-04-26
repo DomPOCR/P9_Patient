@@ -1,15 +1,15 @@
 package com.mediscreen.patient.UT_controller;
 
 
-import com.fasterxml.jackson.databind.BeanProperty;
 import com.mediscreen.patient.controller.PatientController;
 import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
+
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import org.mockito.stubbing.OngoingStubbing;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,11 +25,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import org.mockito.Mockito;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,17 +55,13 @@ public class PatientControllerTest {
     // Constantes pour le jeu de test
 
     String firstNameTest = "James";
-    String firstNameTestEmpty = null;
-
+    String emptyfirstNameTest;
     String lastNameTest = "Bond";
     String birthdateTest = "01/01/1963";
     LocalDate birthdateLocal;
     String genreTest = "M";
     String addressTest = "10 downing St";
     String phoneTest = "0123456789";
-
-    String existingFirstnameTest = "Domp";
-    String existingLastnameTest = "Taylor Waters";
 
     @BeforeEach
     public void setUpEach() {
@@ -121,14 +112,14 @@ public class PatientControllerTest {
                 .andExpect(status().isOk());
     }
 
+    /* Validate correct patient */
     @Test
     public void validatePatientReturnOKTest() throws Exception {
 
        Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, genreTest, addressTest, phoneTest);
 
         // GIVEN
-       Mockito.when(patientDao.save(any(Patient.class))).thenReturn(patientTest);
-       Mockito.when(patientDao.findById(anyLong())).thenReturn(patientTest);
+        Mockito.when(patientDao.findById(anyLong())).thenReturn(patientTest);
 
         // WHEN
         // THEN return the list page
@@ -143,18 +134,19 @@ public class PatientControllerTest {
                 .andDo(print())
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(status().is3xxRedirection());
+
+        Mockito.verify(patientDao,Mockito.times(1)).save(any(Patient.class));
     }
 
+    /* Validate incorrect patient */
     @Test
     public void validatePatientReturnNotOKTest() throws Exception {
 
-        Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, genreTest, addressTest, phoneTest);
-
-        // GIVEN
+        // GIVEN : patient not found
         Mockito.when(patientDao.findById(anyLong())).thenReturn(null);
 
         // WHEN
-        // THEN return the list page
+        // THEN stay to validate page
 
             try {
                 this.mockMvc.perform(post("/patient/validate"));
@@ -162,4 +154,84 @@ public class PatientControllerTest {
                 assertEquals(e.getMessage(),"/patient/validate : KO");
             }
     }
+
+    /* Display patient updating form */
+    @Test
+    void updatePatient_ShowUpdateForm() throws Exception{
+
+        //GIVEN : Give an exiting patient
+        Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, genreTest, addressTest, phoneTest);
+        Mockito.when(patientDao.findById(anyLong())).thenReturn(patientTest);
+
+        //WHEN //THEN return the update page
+        mockMvc.perform(get("/patient/update/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("patient/update"));
+    }
+
+    /* Update existing patient  */
+    @Test
+    void updatePatient_CorrectPatient() throws Exception{
+
+        //GIVEN : Give an exiting patient
+        Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, genreTest, addressTest, phoneTest);
+        Mockito.when(patientDao.findById(anyLong())).thenReturn(patientTest);
+
+        //WHEN //THEN return the list page after update
+        mockMvc.perform(post("/patient/update/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .param("firstname", String.valueOf(firstNameTest))
+                .param("lastname", String.valueOf(lastNameTest))
+                .param("address", String.valueOf(addressTest))
+                .param("birthDate",String.valueOf(birthdateTest))
+                .param("genre", String.valueOf(genreTest)))
+                .andDo(print())
+                .andExpect(view().name("redirect:/patient/list"))
+                .andExpect(status().is3xxRedirection());
+
+        Mockito.verify(patientDao,Mockito.times(1)).save(any(Patient.class));
+    }
+
+    /* Update incorrect patient  */
+    @Test               // TODO OK return ??
+    void updatePatient_InCorrectPatient() throws Exception{
+
+        //GIVEN : Patient not found
+        Mockito.when(patientDao.findById(anyLong())).thenReturn(null);
+
+        // WHEN
+        // THEN stay to validate page
+
+        try {
+            this.mockMvc.perform(post("/patient/update/1")
+                    .param("firstname", emptyfirstNameTest));
+        } catch (Exception e) {
+            assertEquals(e.getMessage(),"/patient/update : KO");
+        }
+    }
+
+    /* Display delete a patient */
+    @Test
+    void deletePatient_PatientListIsReturn() throws Exception{
+
+        //GIVEN : Give an exiting Person
+        Patient patientTest = new Patient(firstNameTest, lastNameTest, birthdateLocal, genreTest, addressTest, phoneTest);
+
+        Mockito.when(patientDao.findById(anyLong())).thenReturn(patientTest);
+
+        //WHEN //THEN return the list page
+        mockMvc.perform(get("/patient/delete/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(view().name("redirect:/patient/list"))
+                .andExpect(status().is3xxRedirection());
+
+        Mockito.verify(patientDao,Mockito.times(1)).delete(any(Patient.class));
+    }
+
 }
