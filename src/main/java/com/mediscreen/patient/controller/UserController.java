@@ -85,7 +85,7 @@ public class UserController {
      * @return Add user page
      */
     @GetMapping("user/add")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public String addUser(User user) {
         logger.info("GET /user/add : Start");
         return "user/add";
