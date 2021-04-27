@@ -14,5 +14,4 @@ public interface PatientDao extends JpaRepository<Patient, Integer> {
 
     Optional<Patient> findById(Integer id);
 
-    void addPatient(Patient patientTest);
 }
