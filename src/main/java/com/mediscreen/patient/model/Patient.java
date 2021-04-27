@@ -1,6 +1,6 @@
 package com.mediscreen.patient.model;
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -8,11 +8,12 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "patient")
-public class Patient  {
+public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(columnDefinition = "TINYINT")
+    private Integer id;
 
     @Column(name = "firstname", length = 100)
     @NotNull
@@ -36,20 +37,29 @@ public class Patient  {
     @NotNull
     private String genre;
 
-
     public Patient() {
-        super();
+
     }
 
-    public Patient(long id, String firstName, String lastName, LocalDate birthdate, String genre, String address, String phone) {
-        super();
+    public Patient(Integer id, String firstName, String lastName, String address, LocalDate birthdate, String phone, String genre) {
+
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthdate = birthdate;
-        this.genre = genre;
         this.address = address;
+        this.birthdate = birthdate;
         this.phone = phone;
+        this.genre = genre;
+    }
+
+    public Patient(String firstName, String lastName, String address, LocalDate birthdate, String phone, String genre) {
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.birthdate = birthdate;
+        this.phone = phone;
+        this.genre = genre;
     }
 
     @Override
@@ -65,14 +75,12 @@ public class Patient  {
                 '}';
     }
 
-    public Patient(String firstName, String lastName, LocalDate birthdate, String genre, String address, String phone) {
-    }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -92,22 +100,6 @@ public class Patient  {
         this.lastName = lastName;
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -116,11 +108,27 @@ public class Patient  {
         this.address = address;
     }
 
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 }
