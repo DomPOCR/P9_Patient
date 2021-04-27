@@ -3,6 +3,7 @@ package com.mediscreen.patient.controller;
 import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
 
+import com.mediscreen.patient.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class PatientController {
@@ -88,8 +90,8 @@ public class PatientController {
      * @return patient/update if OK
      */
     @GetMapping("/patient/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Long id, Model model) {
-        Patient patient = patientDao.findById(id);
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        Patient patient = patientDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         model.addAttribute("patient", patient);
         logger.info("GET /patient/update : OK");
         return "patient/update";
@@ -105,7 +107,11 @@ public class PatientController {
      * @return patient/list if ok or patient/update if ko
      */
     @PostMapping("/patient/update/{id}")
-    public String updatePatient(@PathVariable("id") Long id, @Valid Patient patient, BindingResult result, Model model) {
+    public String updatePatient(@PathVariable("id") Integer id, @Valid Patient patient,
+                                BindingResult result, Model model) {
+
+        patient.setId(id);
+
         if (result.hasErrors()) {
             logger.error("POST /patient/update : KO " + result.getAllErrors());
             return "patient/update";
@@ -125,8 +131,8 @@ public class PatientController {
      * @return patient/list if ok
      */
     @GetMapping("/patient/delete/{id}")
-    public String deletePatient(@PathVariable("id") Long id, Model model) {
-        Patient patient = patientDao.findById(id);
+    public String deletePatient(@PathVariable("id") Integer id, Model model) {
+        Patient patient = patientDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         patientDao.delete(patient);
         model.addAttribute("patients", patientDao.findAll());
         logger.info("/patient/delete : OK");
