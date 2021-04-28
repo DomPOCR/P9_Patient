@@ -1,0 +1,75 @@
+<!--
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MEDISCREEN APP</title>
+</head>
+<body>
+<h3>Access Denied Exception</h3>
+<div>
+  Logged in user: <b th:inline="text"  class="user"> [[${#httpServletRequest.remoteUser}]] </b>
+  <form th:action="@{/app-logout}" method="POST">
+    <input type="submit" value="Logout"/>
+  </form>
+</div>
+<p class="error" th:text="${errorMsg}">Error</p>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{~/css/bootstrap.min.css}" />
+    <!--<link rel="stylesheet" type="text/css" th:href="@{~/css/style.default.css}" />-->
+</head>
+<body marginwidth="0" marginheight="0">
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+        </div>
+        <div class="col-md-4 ml-auto">
+            <a href="/home">Home</a>&nbsp
+        </div>
+    </div>
+    <div class="row">
+        <h1>MEDISCREEN Error Page</h1>
+    </div>
+    <div class="row">Page doesn't exist</div>
+    <div class="row rowDesign">
+        <div class="col-md-4 ml-auto">
+            <span class="legend">Date</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${timestamp}"></span>
+        </div>
+    </div>
+    <div class="row rowDesign">
+        <div class="col-md-4 ml-auto">
+            <span class="legend">Path</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${path}"></span>
+        </div>
+    </div>
+    <div class="row rowDesign">
+        <div class="col-md-4 ml-auto">
+            <span class="legend">Error</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${error}"></span>
+        </div>
+    </div>
+    <div class="row rowDesign">
+        <div class="col-md-4 ml-auto">
+            <span class="legend">Status</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${status}"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

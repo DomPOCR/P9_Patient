@@ -1,28 +1,36 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title> Mediscreen App </title>
-    <link rel="stylesheet" href="/static/css/styles.css"/>
+    <link href="/static/css/styles.css" rel="stylesheet"/>
 </head>
 <body>
 <div sec:authorize="isAuthenticated()">
-    <a href="javascript: document.logoutForm.submit()" class="dropdown-toggle">Sign out</a>
-    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+    <a class="dropdown-toggle" href="javascript: document.logoutForm.submit()">Sign out</a>
+    <form method="post" name="logoutForm" th:action="@{/logout}" th:hidden="true">
         <input hidden type="submit" value="Sign Out" />
     </form>
 </div>
 <div class="row">
     <div class="col-6">
-        <h2> WELCOME TO MEDISCREEN HOME PAGE </h2>
+        <h2> WELCOME TO MEDISCREEN HOME PAGE : </h2>
+        <h3 sec:authentication="name"></h3>
+    </div>
+
 
         </p>
         <img th:src="@{/images/logo.png}">
         <p>
+        <div sec:authorize ="hasAuthority('ADMIN')">
         <h3> USER MANAGEMENT (ADMIN only) </h3>
         <p>
             <a href="/user/list">User management</a>
         </p>
         <p>
+        </div>
         <h3> VIEW PATIENTS </h3>
             <a href="/patient/list">Patient list</a>&nbsp
         </p>
@@ -30,7 +38,6 @@
 
     </div>
 </div>
-
 
 </body>
 </html>
