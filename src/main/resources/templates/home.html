@@ -5,25 +5,23 @@
 
 <head>
     <title> Mediscreen App </title>
-    <link href="/static/css/styles.css" rel="stylesheet"/>
+    <link href="/static/css/bootstrap.min.css.css" rel="stylesheet"/>
 </head>
-<body>
+<body th:style="'background: url(/images/background.png) no-repeat center right fixed;'">
 <div sec:authorize="isAuthenticated()">
     <a class="dropdown-toggle" href="javascript: document.logoutForm.submit()">Sign out</a>
     <form method="post" name="logoutForm" th:action="@{/logout}" th:hidden="true">
         <input hidden type="submit" value="Sign Out" />
     </form>
+    <div class="col-1">
+        <h2> WELCOME TO MEDISCREEN HOME PAGE  </h2>
+            <p>
+                <img th:src="@{/images/logo.png}">
+            </p>
+    </div>
 </div>
 <div class="row">
-    <div class="col-6">
-        <h2> WELCOME TO MEDISCREEN HOME PAGE : </h2>
-        <h3 sec:authentication="name"></h3>
-    </div>
 
-
-        </p>
-        <img th:src="@{/images/logo.png}">
-        <p>
         <div sec:authorize ="hasAuthority('ADMIN')">
         <h3> USER MANAGEMENT (ADMIN only) </h3>
         <p>
