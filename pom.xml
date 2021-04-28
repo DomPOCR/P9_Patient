@@ -86,7 +86,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -321,12 +324,9 @@
                     <!-- Sets the VM argument line used when unit tests are run. -->
                     <!--suppress UnresolvedMavenProperty -->
                     <argLine>${surefireArgLine}</argLine>
-                    <!-- exclusion des classes suffixées com.nnk.springboot.IT qui correspondent à des tests
-                        d'intégration -->
                     <!-- Excludes integration tests when unit tests are run. -->
                     <excludes>
                         <exclude>**/*IT.java</exclude>
-                        <exclude>*com/nkk/springboot/services/**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
