@@ -5,37 +5,31 @@
 
 <head>
     <title> Mediscreen App </title>
-    <link href="/static/css/bootstrap.min.css.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
-<body th:style="'background: url(/images/background.png) no-repeat center right fixed;'">
-<div sec:authorize="isAuthenticated()">
-    <a class="dropdown-toggle" href="javascript: document.logoutForm.submit()">Sign out</a>
-    <form method="post" name="logoutForm" th:action="@{/logout}" th:hidden="true">
-        <input hidden type="submit" value="Sign Out" />
-    </form>
-    <div class="col-1">
-        <h2> WELCOME TO MEDISCREEN HOME PAGE  </h2>
+<body th:style="'background: url(/images/background.png) no-repeat right fixed;'">
+    <div sec:authorize="isAuthenticated()">
+        <button type="button" class="btn btn-outline-info">
+            <a href="javascript: document.logoutForm.submit()">Sign out</a>
+            <form method="post" name="logoutForm" th:action="@{/logout}" th:hidden="true">
+                <input hidden type="submit" value="Sign Out" />
+            </form>
+        </button>
+        <div class="container">
+              <p class="display-2 blockquote text-center mb-1 bg-primary lead">WELCOME TO MEDISCREEN HOME PAGE</p>
+
             <p>
                 <img th:src="@{/images/logo.png}">
             </p>
-    </div>
-</div>
-<div class="row">
-
-        <div sec:authorize ="hasAuthority('ADMIN')">
-        <h3> USER MANAGEMENT (ADMIN only) </h3>
-        <p>
-            <a href="/user/list">User management</a>
-        </p>
-        <p>
+            <div sec:authorize ="hasAuthority('ADMIN')">
+                    <a class="btn btn-primary btn-lg" href="/user/list" role="button">User management</a>
+              </div>
+                <br>
+                    <a class="btn btn-primary btn-lg"  href="/patient/list" role="button">Patient list</a>
+                </br>
         </div>
-        <h3> VIEW PATIENTS </h3>
-            <a href="/patient/list">Patient list</a>&nbsp
-        </p>
-
-
     </div>
-</div>
-
 </body>
 </html>
+
+
