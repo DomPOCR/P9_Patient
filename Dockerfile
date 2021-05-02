@@ -1,5 +1,6 @@
 FROM openjdk:8-jdk-alpine
 EXPOSE 8080
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} P9_Patient-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java","-jar","/P9_Patient-0.0.1-SNAPSHOT.jar"]
+VOLUME /var/lib/mysql/data
+ARG JAR_FILE=target/P9_Patient-0.0.1-SNAPSHOT.jar
+ADD ${JAR_FILE} p9_patient.jar
+ENTRYPOINT ["java","-jar","/p9_patient.jar"]
