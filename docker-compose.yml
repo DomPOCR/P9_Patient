@@ -1,34 +1,31 @@
 version: '3'
+
 services:
   db:
-    image: mysql:latest
-    healthcheck:
-      test: "exit 0"
-    container_name: mysql
-    restart: always
-    volumes:
-      - "./db_data:/var/lib/docker/volumes/mysql/_data"
+    image: mysql
+    restart: on-failure
+    #container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: 'RootRoot_'
       MYSQL_DATABASE: 'p9_db'
       MYSQL_USER: 'p9user'
       MYSQL_PASSWORD: 'P9OCR@'
-    # <Port exposed> : < MySQL Port running inside container>
+      # <Port exposed> : < MySQL Port running inside container>
     ports:
-      - "3307:3306"
+    - 3307:3306
 
   patient:
     image: p9_patient:latest
     container_name: p9_patient
-    # Where our data will be persisted
-    volumes:
-      - "./db_data:/var/lib/docker/volumes/mysql/_data"
-    depends_on:
-      db:
-        condition: service_healthy
+      # Where our data will be persisted
+    # volumes:
+    #- "./db_data:/var/lib/docker/volumes/mysql/_data"
+    #depends_on:
+    #db:
+    #  condition: service_healthy
     ports:
       - "8080:8080"
     restart: on-failure
-# Names of volumes
-volumes:
-  db_data:
+  # Names of volumes
+  #volumes:
+  #db_data:
