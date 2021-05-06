@@ -4,22 +4,24 @@
 <head>
     <meta charset="utf-8"/>
     <title> Mediscreen App </title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-6">
-        </div>
-        <div class="col-6 text-right">
-            <a href="/home">Home</a>&nbsp
+        <div class="border-left">
+            <button type="button" class="btn btn-outline-info">
+                <a href="/home">Home</a>&nbsp
+            </button>
         </div>
     </div>
-    <div class="row"><h2>User List</h2></div>
+    <p></p>
+    <p class="display-1 blockquote text-center mb-1 bg-primary lead">List of registred users</p>
+    <p></p>
     <div class="row">
         <a href="/user/add" class="btn btn-primary btn-sm">Add user</a>
         <p></p>
-        <table border="1">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th>Id</th>
@@ -31,12 +33,12 @@
             <tbody>
             <tr th:each="user, iStat : ${userList}" th:style="${iStat.odd}? 'font-weight: normal;'">
 
-                <td style="width: 20%" class="text-center" th:text="${user.id}"></td>
-                <td class="text-center" th:text="${user.username}"></td>
-                <td style="width: 35%" class="text-center" th:text="${user.role}"></td>
-                <td style="width: 25%" class="text-center">
-                    <a th:href="@{/user/update/{id}(id=${user.id})}">Edit</a>&nbsp;|&nbsp;
-                    <a th:href="@{/user/delete/{id}(id=${user.id})}"
+                <td style="width: 10%"  th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.role}"></td>
+                <td class="text-center" style="width: 15%" >
+                    <a class="btn btn-info btn-sm"  th:href="@{/user/update/{id}(id=${user.id})}">Edit</a>&nbsp;|&nbsp;
+                    <a class="btn btn-danger btn-sm"  th:href="@{/user/delete/{id}(id=${user.id})}"
                        onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
                 </td>
             </tr>
