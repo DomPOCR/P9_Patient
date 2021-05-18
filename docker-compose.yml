@@ -2,32 +2,31 @@ version: '3'
 services:
   db:
     image: mysql
-    healthcheck:
-      test: "exit 0"
-    #volumes:
-    #- db_data:/var/lib/mysql/data
-
-    #container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 'RootRoot_'
+      MYSQL_ROOT_PASSWORD: 'root'
       MYSQL_DATABASE: 'p9_db'
-      MYSQL_USER: 'p9user'
-      MYSQL_PASSWORD: 'P9OCR@'
-      # <Port exposed> : < MySQL Port running inside container>
+      MYSQL_USER: 'p9'
+      MYSQL_PASSWORD: 'p9'
     ports:
-      - "3307:3306"
+      - "3306:3306"
+    networks:
+      - patient-mysql
   patient:
     image: p9_patient:latest
     container_name: p9_patient
-    # Where our data will be persisted
-    # volumes:
-    #- "./db_data:/var/lib/docker/volumes/mysql/_data"
-    depends_on:
-      db:
-        condition: service_healthy
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    restart: "no"
-  # Names of volumes
-  #volumes:
-  #  db_data:
+    environment:
+     SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/p9_db?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
+    depends_on:
+      - db
+    networks:
+      - patient-mysql
+networks:
+  patient-mysql:
+    driver: bridge
+
+
