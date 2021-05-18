@@ -14,3 +14,8 @@ VALUES
 (12,'Max','Buckland','1945-06-24','M','193 Vale St','833-534-0864'),
 (13,'Natalie','Clark','1964-06-18','F','12 Beechwood Road','241-467-9197'),
 (14,'Piers','Bailey','1959-06-28','M','1202 Bumble Dr','747-815-0557');
+
+INSERT INTO p9_db.user(id,username,password,role)
+VALUES
+(1,'domp','$2a$10$l.LADbaPZKdrDYy4kPzN9u10fomM2HuhFh6oeDIfcHsAHwS7foNvu','admin'),
+(2,'user','$2a$10$Y.ryVIaZ1xCNEI3KKmMhFOAiIi1cNfhtDNj1XHjA7gXNhJKjDzNtK','user');

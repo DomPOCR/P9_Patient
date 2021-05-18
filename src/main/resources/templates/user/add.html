@@ -15,9 +15,10 @@
             </button>
         </div>
     </div>
-    <div class="row">
-        <h2>Add New User</h2>
-    </div>
+    <p>    </p>
+    <fieldset class="scheduler-border">
+        <legend class="scheduler-border">Add New User</legend>
+    </fieldset>
 
     <div class="row">
         <form action="#" th:action="@{/user/validate}" th:object="${user}" method="post" class="form-horizontal"
@@ -44,9 +45,8 @@
                     <p class="text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></p>
                 </div>
             </div>
-
-
             <div class="form-group">
+                <p>    </p>
                 <div class="col-sm-12">
                     <a class="btn btn-danger btn-sm" href="/user/list">Cancel</a>
                     <input class="btn btn-primary btn-sm" type="submit" value="Add user">
