@@ -17,5 +17,5 @@ VALUES
 
 INSERT INTO p9_db.user(id,username,password,role)
 VALUES
-(1,'domp','$2a$10$l.LADbaPZKdrDYy4kPzN9u10fomM2HuhFh6oeDIfcHsAHwS7foNvu','admin'),
-(2,'user','$2a$10$Y.ryVIaZ1xCNEI3KKmMhFOAiIi1cNfhtDNj1XHjA7gXNhJKjDzNtK','user');
+(1,'domp','$2y$12$6VlKNg2DItKlOHOi7s2z6eT367Y93xJ.n5z2gU3CxA7.ydVOWsItK','admin'),
+(2,'user','$2y$12$2xdc.tu5oVtBmtxmcKPX4OpHHf6PsReAjYDvbxyq8c1UCwF0P.tGC','user');
