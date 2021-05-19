@@ -47,7 +47,7 @@ public class UserController {
      * @param model
      * @return the user list
      */
-    @GetMapping("/user/list")
+    @GetMapping(value ="/user/list")
     @ResponseStatus(HttpStatus.OK)
     public String listUser(Model model) {
         model.addAttribute("userList", userDao.findAll());
@@ -82,7 +82,7 @@ public class UserController {
      * @param user
      * @return Add user page
      */
-    @GetMapping("user/add")
+    @GetMapping(value ="user/add")
     @ResponseStatus(HttpStatus.OK)
     public String addUser(User user) {
         logger.info("GET /user/add : Start");
