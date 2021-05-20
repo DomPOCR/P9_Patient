@@ -36,7 +36,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login/**").permitAll()
             .and()
                 .formLogin()  //login configuration
-                .defaultSuccessUrl("/home")
+                .defaultSuccessUrl("/home",true)
             .and()
                 .logout()    //logout configuration
                 .logoutSuccessUrl("/login")
