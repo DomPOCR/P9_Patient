@@ -51,7 +51,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public String listUser(Model model) {
         model.addAttribute("userList", userDao.findAll());
-        logger.info("/user/list : OK");
+        logger.info("user/list : OK");
         return "user/list";
     }
 

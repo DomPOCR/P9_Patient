@@ -21,7 +21,7 @@
             <p>
                 <img th:src="@{/images/logo.png}">
             </p>
-            <div sec:authorize ="hasAuthority('ADMIN')">
+            <div sec:authorize ="hasAuthority('ADMIN')" >
                     <a class="btn btn-primary btn-lg" href="/user/list" role="button">User management</a>
               </div>
                 <br>

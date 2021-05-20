@@ -9,6 +9,8 @@ services:
       MYSQL_PASSWORD: 'p9'
     ports:
       - "3306:3306"
+    healthcheck:
+      test: "exit 0"
     networks:
       - patient-mysql
   patient:
@@ -22,7 +24,8 @@ services:
     environment:
      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/p9_db?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - patient-mysql
 networks:
