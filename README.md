@@ -2,18 +2,22 @@
 
 Micro-service Patient manage patients informations on MEDISCREEN Application.
 
-## Purpose
-
-## Getting Started
+# Getting Started
 
 - Endpoint : http://localhost:8080/
 
-## Prerequisite to run
+# Prerequis 
 
 - Java 1.8 JDK
 - Gradle 5.1
 - Spring Boot 2.2.6
 - Docker 20.10.5 
+
+# Installation
+
+## Modifie host file :
+
+- 127.0.0.1 patient
 
 ## Run app (localhost:8080)
 
@@ -37,6 +41,7 @@ docker rmi -f p9_patient
 ~~~
 # URL : HomePage
 
-http://localhost:8080/home
+http://patient:8080/home
+
 
 
