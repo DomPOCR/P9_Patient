@@ -25,9 +25,6 @@ public class UserController {
 
     @Autowired
     private UserDao userDao;
-    private User user;
-    private BindingResult result;
-    private Model model;
 
     /**
      * HomePage
