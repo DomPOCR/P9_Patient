@@ -284,11 +284,7 @@
     <!-- ******************************************************************* -->
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
+             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.7</version>
@@ -406,9 +402,6 @@
                             <dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
                             <!-- Sets the output directory for the code coverage report. -->
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-                            <excludes>
-                                <exclude></exclude>
-                            </excludes>
                         </configuration>
                     </execution>
                     <!-- Merge UT et com.nnk.springboot.IT -->
@@ -440,10 +433,6 @@
                             <title>${project.name} : Fusion tests unitaires et d'intégration</title>
                             <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-merged</outputDirectory>
-                            <excludes>
-                                <exclude></exclude>
-
-                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
