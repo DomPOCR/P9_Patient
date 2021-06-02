@@ -2,6 +2,7 @@ package com.mediscreen.patient.controller;
 
 import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.service.PatientService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class PatientController {
     final Logger logger = LogManager.getLogger(this.getClass().getName());
 
     @Autowired
-    private PatientDao patientDao;
+    private PatientService patientService;
 
     /*---------------------------  GET  ------------------------------*/
 
@@ -35,7 +36,7 @@ public class PatientController {
     @GetMapping(value = "/patient/list")
     @ResponseStatus(HttpStatus.OK)
     public String listPatient(Model model) {
-        model.addAttribute("patientList", patientDao.findAll());
+        model.addAttribute("patientList", patientService.findAll());
         logger.info("patient/list : OK");
         return "patient/list";
     }
@@ -52,8 +53,8 @@ public class PatientController {
     public String validate(@Valid Patient patient, BindingResult result, Model model) {
 
         if (!result.hasErrors()) {
-            patientDao.save(patient);
-            model.addAttribute("patient", patientDao.findAll());
+            patientService.savePatient(patient);
+            model.addAttribute("patient", patientService.findAll());
             logger.info("POST /patient/validate : OK" + patient.toString());
             return "redirect:/patient/list";
         }
@@ -88,7 +89,7 @@ public class PatientController {
      */
     @GetMapping("/patient/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        Patient patient = patientDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         model.addAttribute("patient", patient);
         logger.info("GET /patient/update : OK");
         return "patient/update";
@@ -114,8 +115,8 @@ public class PatientController {
             return "patient/update";
         }
 
-        patientDao.save(patient);
-        model.addAttribute("patients", patientDao.findAll());
+        patientService.savePatient(patient);
+        model.addAttribute("patients", patientService.findAll());
         logger.info("POST /patient/update : OK");
         return "redirect:/patient/list";
     }
@@ -129,9 +130,9 @@ public class PatientController {
      */
     @GetMapping("/patient/delete/{id}")
     public String deletePatient(@PathVariable("id") Integer id, Model model) {
-        Patient patient = patientDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        patientDao.delete(patient);
-        model.addAttribute("patients", patientDao.findAll());
+        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        patientService.deletePatient(patient);
+        model.addAttribute("patients", patientService.findAll());
         logger.info("/patient/delete : OK");
         return "redirect:/patient/list";
     }

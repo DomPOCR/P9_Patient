@@ -3,6 +3,7 @@ package com.mediscreen.patient.controller;
 import com.mediscreen.patient.dao.UserDao;
 import com.mediscreen.patient.model.User;
 
+import com.mediscreen.patient.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,7 +25,7 @@ public class UserController {
     final Logger logger = LogManager.getLogger(this.getClass().getName());
 
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     /**
      * HomePage
@@ -47,7 +48,7 @@ public class UserController {
     @GetMapping(value ="/user/list")
     @ResponseStatus(HttpStatus.OK)
     public String listUser(Model model) {
-        model.addAttribute("userList", userDao.findAll());
+        model.addAttribute("userList", userService.findAll());
         logger.info("user/list : OK");
         return "user/list";
     }
@@ -66,8 +67,8 @@ public class UserController {
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
-            userDao.save(user);
-            model.addAttribute("users", userDao.findAll());
+            userService.saveUser(user);
+            model.addAttribute("users", userService.findAll());
             logger.info("user/validate : ended for user : " + user.toString());
             return "redirect:/user/list";
         }
@@ -97,7 +98,7 @@ public class UserController {
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
         logger.info("showUpdateForm start for id " + id);
-        User user = userDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        User user = userService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         user.setPassword("");
         model.addAttribute("user", user);
         logger.info("showUpdateForm ended for id " + id);
@@ -129,8 +130,8 @@ public class UserController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
 
-        userDao.save(user);
-        model.addAttribute("users", userDao.findAll());
+        userService.saveUser(user);
+        model.addAttribute("users", userService.findAll());
         logger.info("user//update : ended for user :" + user.toString());
         return "redirect:/user/list";
     }
@@ -146,9 +147,9 @@ public class UserController {
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
 
         logger.info("delete user start for id " + id);
-        User user = userDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        userDao.delete(user);
-        model.addAttribute("users", userDao.findAll());
+        User user = userService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        userService.deleteUser(user);
+        model.addAttribute("users", userService.findAll());
         logger.info("user/delete ended for : " + user.toString());
         return "redirect:/user/list";
     }

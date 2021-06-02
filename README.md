@@ -27,7 +27,7 @@ java -jar Patient-0.0.1.jar
 
 To build and run the app :
 ~~~
-docker compose -up --build
+docker compose up --build
 ~~~
 
 To stop the app :
