@@ -1,7 +1,7 @@
 package com.mediscreen.patient.IT;
 
-import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.service.PatientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class PatientControllerTestIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private PatientDao patientDao;
+    private PatientService patientService;
 
     String firstNameTest = "James";
     String lastNameTest = "Bond";
@@ -55,7 +55,7 @@ public class PatientControllerTestIT {
     void addPatient_ValidatePatient() throws Exception{
 
         List<Patient> patientsBeforeAdd;
-        patientsBeforeAdd = patientDao.findAll();
+        patientsBeforeAdd = patientService.findAll();
 
         //GIVEN
 
@@ -75,7 +75,7 @@ public class PatientControllerTestIT {
                 .andExpect(view().name("redirect:/patient/list"));
 
         List<Patient> patientsAfterAdd;
-        patientsAfterAdd = patientDao.findAll();
+        patientsAfterAdd = patientService.findAll();
 
         assertEquals(patientsAfterAdd.size(),patientsBeforeAdd.size()+1);
     }
@@ -89,10 +89,10 @@ public class PatientControllerTestIT {
 
         //GIVEN
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
-        patientDao.save(patientTest);
+        patientService.savePatient(patientTest);
 
         List<Patient> patientsBeforeDelete;
-        patientsBeforeDelete = patientDao.findAll();
+        patientsBeforeDelete = patientService.findAll();
 
         // WHEN
         // THEN
@@ -104,7 +104,7 @@ public class PatientControllerTestIT {
                 .andExpect(view().name("redirect:/patient/list"));
 
         List<Patient> patientsAfterDelete;
-        patientsAfterDelete = patientDao.findAll();
+        patientsAfterDelete = patientService.findAll();
 
         assertEquals(patientsAfterDelete.size(),patientsBeforeDelete.size()-1);
     }
@@ -114,10 +114,10 @@ public class PatientControllerTestIT {
 
         //GIVEN
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
-        patientDao.save(patientTest);
+        patientService.savePatient(patientTest);
 
         List<Patient> patientsBeforeDelete;
-        patientsBeforeDelete = patientDao.findAll();
+        patientsBeforeDelete = patientService.findAll();
 
         // WHEN
         // THEN
@@ -132,7 +132,7 @@ public class PatientControllerTestIT {
             assertTrue(e.getMessage().contains("failed"));
         }
         List<Patient> patientsAfterDelete;
-        patientsAfterDelete = patientDao.findAll();
+        patientsAfterDelete = patientService.findAll();
 
         assertEquals(patientsAfterDelete.size(),patientsBeforeDelete.size());
     }

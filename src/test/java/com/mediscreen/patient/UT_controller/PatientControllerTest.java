@@ -2,8 +2,8 @@ package com.mediscreen.patient.UT_controller;
 
 
 import com.mediscreen.patient.controller.PatientController;
-import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.service.PatientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +51,7 @@ public class PatientControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private PatientDao patientDao;
+    private PatientService patientService;
 
     @BeforeEach
     public void setUpEach() {
@@ -68,7 +68,7 @@ public class PatientControllerTest {
 
         // GIVEN
         patientList.add(patientTest);
-        Mockito.when(patientDao.findAll()).thenReturn(patientList);
+        Mockito.when(patientService.findAll()).thenReturn(patientList);
 
         // WHEN
         // THEN
@@ -79,7 +79,7 @@ public class PatientControllerTest {
                 .andDo(print())
                 .andExpect(view().name("patient/list"))
                 .andExpect(status().isOk());
-        Mockito.verify(patientDao, Mockito.times(1)).findAll();
+        Mockito.verify(patientService, Mockito.times(1)).findAll();
     }
 
 
@@ -109,7 +109,7 @@ public class PatientControllerTest {
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
 
         // GIVEN
-        Mockito.when(patientDao.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
 
         // WHEN
         // THEN return the list page
@@ -127,7 +127,7 @@ public class PatientControllerTest {
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(status().is3xxRedirection());
 
-        Mockito.verify(patientDao, Mockito.times(1)).save(any(Patient.class));
+        Mockito.verify(patientService, Mockito.times(1)).savePatient(any(Patient.class));
     }
 
     /* Validate incorrect patient */
@@ -135,7 +135,7 @@ public class PatientControllerTest {
     public void validatePatientReturnNotOKTest() throws Exception {
 
         // GIVEN : patient not found
-        Mockito.when(patientDao.findById(anyInt())).thenReturn(null);
+        Mockito.when(patientService.findById(anyInt())).thenReturn(null);
 
         // WHEN
         // THEN stay to validate page
@@ -153,7 +153,7 @@ public class PatientControllerTest {
 
         //GIVEN : Give an exiting patient
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
-        Mockito.when(patientDao.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
 
         //WHEN //THEN return the update page
         mockMvc.perform(get("/patient/update/1")
@@ -170,7 +170,7 @@ public class PatientControllerTest {
 
         //GIVEN : Give an exiting patient
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
-        Mockito.when(patientDao.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
 
         //WHEN //THEN return the list page after update
         this.mockMvc.perform(post("/patient/update/1")
@@ -187,7 +187,7 @@ public class PatientControllerTest {
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(status().is3xxRedirection());
 
-        Mockito.verify(patientDao, Mockito.times(1)).save(any(Patient.class));
+        Mockito.verify(patientService, Mockito.times(1)).savePatient(any(Patient.class));
     }
 
     /* Update incorrect patient  */
@@ -195,7 +195,7 @@ public class PatientControllerTest {
     void updatePatient_InCorrectPatient() throws Exception {
 
         //GIVEN : Patient not found
-        Mockito.when(patientDao.findById(anyInt())).thenReturn(null);
+        Mockito.when(patientService.findById(anyInt())).thenReturn(null);
 
         // WHEN firstName is empty
         // THEN stay to validate page
@@ -220,7 +220,7 @@ public class PatientControllerTest {
         //GIVEN : Give an exiting Person
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
 
-        Mockito.when(patientDao.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
 
         //WHEN //THEN return the list page
         mockMvc.perform(get("/patient/delete/1")
@@ -230,7 +230,7 @@ public class PatientControllerTest {
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(status().is3xxRedirection());
 
-        Mockito.verify(patientDao, Mockito.times(1)).delete(any(Patient.class));
+        Mockito.verify(patientService, Mockito.times(1)).deletePatient(any(Patient.class));
     }
 
     @Configuration

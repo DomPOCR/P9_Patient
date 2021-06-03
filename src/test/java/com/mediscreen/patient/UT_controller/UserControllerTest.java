@@ -1,8 +1,8 @@
 package com.mediscreen.patient.UT_controller;
 
 import com.mediscreen.patient.controller.UserController;
-import com.mediscreen.patient.dao.UserDao;
 import com.mediscreen.patient.model.User;
+import com.mediscreen.patient.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -37,7 +37,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserDao userDao;
+    private UserService userService;
 
     @Configuration
     static class ContextConfiguration {
@@ -62,14 +62,14 @@ public class UserControllerTest {
         //GIVEN
         User userTest = new User(username,password,role);
         userList.add(userTest);
-        Mockito.when(userDao.findAll()).thenReturn(userList);
+        Mockito.when(userService.findAll()).thenReturn(userList);
 
         //WHEN //THEN return the list page
         mockMvc.perform(get("/user/list"))
                 .andDo(print())
                 .andExpect(view().name("user/list"))
                 .andExpect(status().isOk());
-        Mockito.verify(userDao,Mockito.times(1)).findAll();
+        Mockito.verify(userService,Mockito.times(1)).findAll();
     }
 
     /* Display user adding form*/
@@ -93,7 +93,7 @@ public class UserControllerTest {
 
         //GIVEN : Give a new user
         User userTest = new User(username,password,role);
-        Mockito.when(userDao.findById(anyInt())).thenReturn(Optional.of(userTest));
+        Mockito.when(userService.findById(anyInt())).thenReturn(Optional.of(userTest));
 
         //WHEN //THEN return the list page
         mockMvc.perform(post("/user/validate")
@@ -106,7 +106,7 @@ public class UserControllerTest {
                 .andExpect(view().name("redirect:/user/list"))
                 .andExpect(status().is3xxRedirection());
 
-        Mockito.verify(userDao,Mockito.times(1)).save(any(User.class));
+        Mockito.verify(userService,Mockito.times(1)).saveUser(any(User.class));
     }
 
     /* Display user updating form */
@@ -115,7 +115,7 @@ public class UserControllerTest {
 
         //GIVEN : Give an exiting user
         User userTest = new User(username,password,role);
-        Mockito.when(userDao.findById(anyInt())).thenReturn(Optional.of(userTest));
+        Mockito.when(userService.findById(anyInt())).thenReturn(Optional.of(userTest));
 
         //WHEN //THEN return the update page
         mockMvc.perform(get("/user/update/1")
@@ -132,7 +132,7 @@ public class UserControllerTest {
 
         //GIVEN : Give an exiting user
         User userTest = new User(username,password,role);
-        Mockito.when(userDao.findById(anyInt())).thenReturn(Optional.of(userTest));
+        Mockito.when(userService.findById(anyInt())).thenReturn(Optional.of(userTest));
 
         //WHEN //THEN return the list page
         mockMvc.perform(post("/user/update/1")
@@ -145,7 +145,7 @@ public class UserControllerTest {
                 .andExpect(view().name("redirect:/user/list"))
                 .andExpect(status().is3xxRedirection());
 
-        Mockito.verify(userDao,Mockito.times(1)).save(any(User.class));
+        Mockito.verify(userService,Mockito.times(1)).saveUser(any(User.class));
     }
 
     /* Update an incorrect user and stay to update    */
@@ -154,7 +154,7 @@ public class UserControllerTest {
 
         //GIVEN : Give an exiting user
         User userTest = new User(username,password,role);
-        Mockito.when(userDao.findById(anyInt())).thenReturn(Optional.of(userTest));
+        Mockito.when(userService.findById(anyInt())).thenReturn(Optional.of(userTest));
 
         //WHEN //THEN return the update page
         mockMvc.perform(post("/user/update/1")
@@ -167,7 +167,7 @@ public class UserControllerTest {
                 .andExpect(view().name("user/update"))
                 .andExpect(status().isOk());
 
-        Mockito.verify(userDao,Mockito.times(0)).save(any(User.class));
+        Mockito.verify(userService,Mockito.times(0)).saveUser(any(User.class));
     }
 
     /* Display delete a user */
@@ -176,7 +176,7 @@ public class UserControllerTest {
 
         //GIVEN : Give an exiting Person
         User userTest = new User(username,password,role);
-        Mockito.when(userDao.findById(anyInt())).thenReturn(Optional.of(userTest));
+        Mockito.when(userService.findById(anyInt())).thenReturn(Optional.of(userTest));
 
         //WHEN //THEN return the list page
         mockMvc.perform(get("/user/delete/1")
@@ -186,7 +186,7 @@ public class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user/list"));
 
-        Mockito.verify(userDao,Mockito.times(1)).delete(any(User.class));
+        Mockito.verify(userService,Mockito.times(1)).deleteUser(any(User.class));
     }
 
 }

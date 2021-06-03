@@ -1,7 +1,7 @@
 package com.mediscreen.patient.IT;
 
-import com.mediscreen.patient.dao.UserDao;
 import com.mediscreen.patient.model.User;
+import com.mediscreen.patient.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +15,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -28,14 +27,14 @@ public class UserControllerTestIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     /* Add validate user */
     @Test
     void addUser_ValidateUser() throws Exception{
 
         List<User> userListBeforeAdd;
-        userListBeforeAdd = userDao.findAll();
+        userListBeforeAdd = userService.findAll();
 
         //GIVEN
         String username = "usernameTest";
@@ -55,7 +54,7 @@ public class UserControllerTestIT {
                 .andExpect(status().is3xxRedirection());
 
         List<User> userListAfterAdd;
-        userListAfterAdd = userDao.findAll();
+        userListAfterAdd = userService.findAll();
 
         assertEquals(userListAfterAdd.size(),userListBeforeAdd.size()+1);
     }
@@ -65,7 +64,7 @@ public class UserControllerTestIT {
     void validateUser_NonCompliant_Password() throws Exception{
 
         List<User> userListBeforeAdd;
-        userListBeforeAdd = userDao.findAll();
+        userListBeforeAdd = userService.findAll();
 
         //GIVEN : Give a new user with non compliant password
         String username = "usernameTest";
@@ -88,7 +87,7 @@ public class UserControllerTestIT {
             assertTrue(e.getMessage().contains("Password must contain 1 or more uppercase characters"));
         }
         List<User> userListAfterAdd;
-        userListAfterAdd = userDao.findAll();
+        userListAfterAdd = userService.findAll();
 
         assertEquals(userListAfterAdd.size(),userListBeforeAdd.size());
     }
@@ -97,7 +96,7 @@ public class UserControllerTestIT {
     void deleteUser_ExistingUser() throws Exception{
 
         List<User> userListBeforeDelete;
-        userListBeforeDelete = userDao.findAll();
+        userListBeforeDelete = userService.findAll();
 
         //GIVEN
         String username = "usernameTest";
@@ -117,7 +116,7 @@ public class UserControllerTestIT {
                 .andExpect(view().name("redirect:/user/list"));
 
         List<User> userListAfterDelete;
-        userListAfterDelete = userDao.findAll();
+        userListAfterDelete = userService.findAll();
 
         assertEquals(userListAfterDelete.size(),userListBeforeDelete.size()-1);
     }
@@ -126,7 +125,7 @@ public class UserControllerTestIT {
     void deleteUser_Non_ExistingUser() throws Exception{
 
         List<User> userListBeforeDelete ;
-        userListBeforeDelete = userDao.findAll();
+        userListBeforeDelete = userService.findAll();
 
         //GIVEN
         // WHEN
@@ -142,7 +141,7 @@ public class UserControllerTestIT {
             assertTrue(e.getMessage().contains("Invalid user Id:999"));
         }
         List<User> userListAfterDelete;
-        userListAfterDelete = userDao.findAll();
+        userListAfterDelete = userService.findAll();
 
         assertEquals(userListAfterDelete.size(),userListBeforeDelete.size());
     }

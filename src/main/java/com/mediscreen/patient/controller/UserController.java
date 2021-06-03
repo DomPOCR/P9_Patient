@@ -1,6 +1,5 @@
 package com.mediscreen.patient.controller;
 
-import com.mediscreen.patient.dao.UserDao;
 import com.mediscreen.patient.model.User;
 
 import com.mediscreen.patient.service.UserService;
