@@ -15,8 +15,12 @@ import java.util.Arrays;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private UserDao userDao;
+
+    @Autowired
+    public MyUserDetailsService (UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {

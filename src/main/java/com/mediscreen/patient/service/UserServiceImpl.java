@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private UserDao userDao;
+
     @Autowired
-    UserDao userDao;
+    public UserServiceImpl (UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public Optional<User> findById(int id) {
