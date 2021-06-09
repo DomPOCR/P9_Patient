@@ -21,8 +21,16 @@ public class PatientController {
     // Pour le log4j2
     final Logger logger = LogManager.getLogger(this.getClass().getName());
 
-    @Autowired
     private PatientService patientService;
+
+    @Autowired
+    public PatientController(PatientService patientService) {
+        this.patientService = patientService;
+    }
+
+    public PatientController() {
+
+    }
 
     /*---------------------------  GET  ------------------------------*/
 
