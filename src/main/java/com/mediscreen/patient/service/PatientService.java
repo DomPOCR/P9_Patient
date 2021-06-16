@@ -1,5 +1,6 @@
 package com.mediscreen.patient.service;
 
+import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
 
 import java.util.List;

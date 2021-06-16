@@ -1,10 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="utf-8"/>
+    <title> Mediscreen App </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
-$END$
+<div class="container">
+    <div class="row">
+        <div class="border-left">
+            <button type="button" class="btn btn-outline-info">
+                <a href="/patient/list">Return to patient list</a>&nbsp
+            </button>
+        </div>
+    </div>
+    <p></p>
+    <p class="display-1 blockquote text-center mb-1 bg-primary lead">List of patient note</p>
+    <p class="row"> <h4> Patient : <span th:text="${patient.get().firstName} + ' ' + ${patient.get().lastName} + ' (' + ${patient.get().birthdate} + ')'"></span></h4><br/></p>
+    <p></p>
+    <div class="table-responsive">
+        <a class="btn btn-primary btn-sm" href="/patient/add">Add New Note</a>
+        <p></p>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Date of note</th>
+                <th>Note</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="note, iStat : ${noteList}" th:style="${iStat.odd}? 'font-weight: normal;'">
+                <td style="width: 10%" th:text="${note.dateNote}"></td>
+                <td th:text="${note.textNote}"></td>
+              <td class="margin-right: 15px">
+                    <a class="btn btn-info btn-sm" th:href="@{/patient/patHistory/update/{id}(id=${note.id})}">Edit</a>
+                  <p></p>
+                    <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')" th:href="@{/patHistory/delete/{id}(id=${note.id})}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

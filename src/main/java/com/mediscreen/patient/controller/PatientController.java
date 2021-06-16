@@ -1,7 +1,9 @@
 package com.mediscreen.patient.controller;
 
 import com.mediscreen.patient.dao.PatientDao;
+import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.proxies.NoteProxy;
 import com.mediscreen.patient.service.PatientService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @Controller
@@ -22,6 +25,10 @@ public class PatientController {
     final Logger logger = LogManager.getLogger(this.getClass().getName());
 
     private PatientService patientService;
+
+    @Autowired
+    private NoteProxy noteProxy;
+
 
     @Autowired
     public PatientController(PatientService patientService) {
@@ -70,7 +77,7 @@ public class PatientController {
         return "patient/add";
     }
 
-    // Ajout d'un patient
+   // Ajout d'un patient
 
     /**
      * @param newPatient
@@ -96,6 +103,7 @@ public class PatientController {
      * @return patient/update if OK
      */
     @GetMapping("/patient/update/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         model.addAttribute("patient", patient);
@@ -113,6 +121,7 @@ public class PatientController {
      * @return patient/list if ok or patient/update if ko
      */
     @PostMapping("/patient/update/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public String updatePatient(@PathVariable("id") Integer id, @Valid Patient patient,
                                 BindingResult result, Model model) {
 
@@ -136,7 +145,8 @@ public class PatientController {
      * @param model public interface model, model can be accessed and attributes can be added
      * @return patient/list if ok
      */
-    @GetMapping("/patient/delete/{id}")
+    @PostMapping("/patient/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public String deletePatient(@PathVariable("id") Integer id, Model model) {
         Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         patientService.deletePatient(patient);
@@ -144,4 +154,32 @@ public class PatientController {
         logger.info("/patient/delete : OK");
         return "redirect:/patient/list";
     }
+
+    // Liste des notes du patient (via micro-service Note)
+
+    @GetMapping(value = "/patient/patHistory/list/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String getPatientNoteByPatientId(@PathVariable("id") Integer id, Model model){
+
+        model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
+        model.addAttribute("patient",patientService.findById(id));
+        logger.info("/patient/patHistory/list/ for id : " + id + " OK");
+        return "/patHistory/list";
+    }
+
+
+    // Liste des notes du patient (via micro-service Note)
+
+    @GetMapping(value = "/patient/patHistory/update/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateNote(@PathVariable("id") String id, Model model){
+
+        Note noteToUpdated = noteProxy.getNote(id);
+        model.addAttribute("note",noteToUpdated);
+        model.addAttribute("patient",patientService.findById(noteToUpdated.getPatientId()));
+        logger.info("/patient/patHistory/update/ for id : " + id + " OK");
+        return "/patHistory/update";
+    }
+
+
 }
