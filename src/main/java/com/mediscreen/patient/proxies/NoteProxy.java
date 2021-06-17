@@ -3,8 +3,6 @@ package com.mediscreen.patient.proxies;
 import com.mediscreen.patient.config.FeignClientConfiguration;
 import com.mediscreen.patient.model.Note;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.FeignClientProperties;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +16,7 @@ public interface NoteProxy {
     @GetMapping(value = "/patHistory/{id}")
     Note getNote(@PathVariable("id") String id);
 
-    @GetMapping(value = "/patHistoryPatient/{patientId}")
+    @GetMapping(value = "/patHistory/patient/{patientId}")
     List<Note> getPatientNoteByPatientId(@PathVariable("patientId") Integer patientId);
 
     @PostMapping(value = "/patHistory/add")

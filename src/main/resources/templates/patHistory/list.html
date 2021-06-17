@@ -17,7 +17,7 @@
     </div>
     <p></p>
     <p class="display-1 blockquote text-center mb-1 bg-primary lead">List of patient note</p>
-    <p class="row"> <h4> Patient : <span th:text="${patient.get().firstName} + ' ' + ${patient.get().lastName} + ' (' + ${patient.get().birthdate} + ')'"></span></h4><br/></p>
+    <p class="row"> <h4> Patient : <span th:text="${patient.getFirstName()} + ' ' + ${patient.getLastName()} + ' (' + ${patient.getBirthdate()} + ')'"></span></h4><br/>
     <p></p>
     <div class="table-responsive">
         <a class="btn btn-primary btn-sm" href="/patient/add">Add New Note</a>
@@ -35,7 +35,6 @@
                 <td th:text="${note.textNote}"></td>
               <td class="margin-right: 15px">
                     <a class="btn btn-info btn-sm" th:href="@{/patient/patHistory/update/{id}(id=${note.id})}">Edit</a>
-                  <p></p>
                     <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')" th:href="@{/patHistory/delete/{id}(id=${note.id})}">Delete</a>
                 </td>
             </tr>

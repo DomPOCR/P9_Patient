@@ -1,6 +1,5 @@
 package com.mediscreen.patient.controller;
 
-import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.proxies.NoteProxy;
@@ -15,9 +14,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Optional;
 
-@CrossOrigin(origins = "*")
+/*@CrossOrigin(origins = "*")*/
 @Controller
 public class PatientController {
 
@@ -26,20 +25,21 @@ public class PatientController {
 
     private PatientService patientService;
 
-    @Autowired
     private NoteProxy noteProxy;
 
 
     @Autowired
-    public PatientController(PatientService patientService) {
+    public PatientController(PatientService patientService, NoteProxy noteProxy) {
         this.patientService = patientService;
+        this.noteProxy = noteProxy;
     }
 
     public PatientController() {
 
     }
 
-    /*---------------------------  GET  ------------------------------*/
+    // *******************************************  PATIENT ***********************************/
+
 
     // Liste des patients
 
@@ -56,6 +56,23 @@ public class PatientController {
         return "patient/list";
     }
 
+
+   // Ajout d'un patient
+
+    /**
+     * Add patient
+     * @param newPatient
+     * @return
+     */
+    @GetMapping(value = "patient/add")
+    @ResponseStatus(HttpStatus.OK)
+    public String addPatient(Patient newPatient) {
+
+        logger.info("GET /patient/add : Start");
+        return "patient/add";
+
+    }
+
     /**
      * Endpoint to validate the info of patient
      *
@@ -69,28 +86,12 @@ public class PatientController {
 
         if (!result.hasErrors()) {
             patientService.savePatient(patient);
-            model.addAttribute("patient", patientService.findAll());
+            model.addAttribute("patientList", patientService.findAll());
             logger.info("POST /patient/validate : OK" + patient.toString());
             return "redirect:/patient/list";
         }
         logger.error("/patient/validate : KO" + patient.toString());
         return "patient/add";
-    }
-
-   // Ajout d'un patient
-
-    /**
-     * @param newPatient
-     * @return patient created
-     * @throws Exception
-     */
-    @GetMapping(value = "patient/add")
-    @ResponseStatus(HttpStatus.OK)
-    public String addPatient(Patient newPatient) {
-
-        logger.info("GET /patient/add : Start");
-        return "patient/add";
-
     }
 
     // Mise à jour Patient
@@ -133,9 +134,9 @@ public class PatientController {
         }
 
         patientService.savePatient(patient);
-        model.addAttribute("patients", patientService.findAll());
-        logger.info("POST /patient/update : OK");
-        return "redirect:/patient/list";
+        model.addAttribute("patientList", patientService.findAll());
+        logger.info("/patient/update ended for : " + patient);
+        return "/patient/list";
     }
 
     /**
@@ -145,41 +146,77 @@ public class PatientController {
      * @param model public interface model, model can be accessed and attributes can be added
      * @return patient/list if ok
      */
-    @PostMapping("/patient/delete/{id}")
+    @GetMapping("/patient/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String deletePatient(@PathVariable("id") Integer id, Model model) {
         Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         patientService.deletePatient(patient);
-        model.addAttribute("patients", patientService.findAll());
-        logger.info("/patient/delete : OK");
-        return "redirect:/patient/list";
+        model.addAttribute("patientList", patientService.findAll());
+        logger.info("/patient/delete ended for : " + patient);
+        return "/patient/list";
     }
+
+    // *********************************************  PATIENT's NOTES ***********************************/
 
     // Liste des notes du patient (via micro-service Note)
 
-    @GetMapping(value = "/patient/patHistory/list/{id}")
+    @GetMapping("/patient/patHistory/list/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String getPatientNoteByPatientId(@PathVariable("id") Integer id, Model model){
 
+        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
-        model.addAttribute("patient",patientService.findById(id));
-        logger.info("/patient/patHistory/list/ for id : " + id + " OK");
+        model.addAttribute("patient",patient);
+        logger.info("GET /patient/patHistory/list/ for id : " + patient.getId() + " OK");
         return "/patHistory/list";
     }
 
 
-    // Liste des notes du patient (via micro-service Note)
+    // Update des notes du patient (via micro-service Note)
 
-    @GetMapping(value = "/patient/patHistory/update/{id}")
+    /**
+     * Endpoint to display note updating form
+     * @param id
+     * @param model
+     * @return patHistory/update
+     */
+
+    @GetMapping("/patient/patHistory/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String updateNote(@PathVariable("id") String id, Model model){
+    public String ShowUpdateNote(@PathVariable("id") String id, Model model){
 
         Note noteToUpdated = noteProxy.getNote(id);
         model.addAttribute("note",noteToUpdated);
         model.addAttribute("patient",patientService.findById(noteToUpdated.getPatientId()));
-        logger.info("/patient/patHistory/update/ for id : " + id + " OK");
+        logger.info("GET /patient/patHistory/update/ for patient id : " + noteToUpdated.getPatientId() + " OK");
         return "/patHistory/update";
     }
 
+    // Update des notes du patient (via micro-service Note)
 
+    /**
+     * Endpoint to validate the note updating form
+     * @param id
+     * @param noteId
+     * @param note
+     * @param result
+     * @param model
+     * @return the list of patients if OK or stay to update if KO
+     */
+    @PostMapping("/patient/{id}/patHistory/update/{noteId}")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateNote(@PathVariable("id") Integer id,@PathVariable("noteId") String noteId, @Valid Note note, BindingResult result, Model model) {
+
+        if (result.hasErrors()) {
+            logger.error("POST /patient/patHistory/update : KO " + result.getAllErrors());
+            return "/patHistory/update";
+        }
+        note.setPatientId(id);
+        Note noteUpdated = noteProxy.updateNote(noteId, note);
+        model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
+        model.addAttribute("patient",patientService.findById(id).get());
+        logger.info("POST /patient/patHistory/update/ for patient id : " + noteUpdated.getPatientId() + " OK");
+        //return "redirect:/patient/patHistory/list/{id}";
+        return "/patHistory/list";
+    }
 }
