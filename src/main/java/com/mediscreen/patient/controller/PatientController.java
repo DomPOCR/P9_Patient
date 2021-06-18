@@ -11,10 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 /*@CrossOrigin(origins = "*")*/
 @Controller
@@ -216,7 +218,20 @@ public class PatientController {
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patientService.findById(id).get());
         logger.info("POST /patient/patHistory/update/ for patient id : " + noteUpdated.getPatientId() + " OK");
-        //return "redirect:/patient/patHistory/list/{id}";
         return "/patHistory/list";
     }
+
+    @GetMapping("/patient/{id}/patHistory/delete/{noteId}")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteNote(@PathVariable("id") Integer id,@PathVariable("noteId") String noteId, Model model) {
+
+        Note noteDeleted = noteProxy.deleteNote(noteId);
+        model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
+        model.addAttribute("patient",patientService.findById(id).get());
+        logger.info("GET /patient/patHistory/delete/ for patient id : " + noteDeleted.getPatientId() + " OK");
+        return "/patHistory/list";
+
+    }
+
+
 }
