@@ -63,8 +63,8 @@ public class PatientController {
 
     /**
      * Add patient
-     * @param newPatient
-     * @return
+     * @param newPatient : patient to add
+     * @return the form to add patient
      */
     @GetMapping(value = "patient/add")
     @ResponseStatus(HttpStatus.OK)
@@ -81,7 +81,7 @@ public class PatientController {
      * @param patient, patient to be added
      * @param result   technical result
      * @param model    public interface model, model can be accessed and attributes can be added
-     * @return
+     * @return the form to add patient
      */
     @PostMapping("/patient/validate")
     public String validate(@Valid Patient patient, BindingResult result, Model model) {
@@ -108,7 +108,7 @@ public class PatientController {
     @GetMapping("/patient/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id));
         model.addAttribute("patient", patient);
         logger.info("GET /patient/update : OK");
         return "patient/update";
@@ -117,8 +117,8 @@ public class PatientController {
     /**
      * Endpoint to validate the patient updating form
      *
-     * @param id
-     * @param patient the patient id
+     * @param id the patient id
+     * @param patient the patient informations
      * @param result  technical result
      * @param model   public interface model, model can be accessed and attributes can be added
      * @return patient/list if ok or patient/update if ko
@@ -151,7 +151,7 @@ public class PatientController {
     @GetMapping("/patient/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String deletePatient(@PathVariable("id") Integer id, Model model) {
-        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id));
         patientService.deletePatient(patient);
         model.addAttribute("patientList", patientService.findAll());
         logger.info("/patient/delete ended for : " + patient);
@@ -162,11 +162,18 @@ public class PatientController {
 
     // Liste des notes du patient (via micro-service Note)
 
+    /**
+     *
+     * @param id patient id
+     * @param model add
+     * @return patient notes list
+     */
+
     @GetMapping("/patient/patHistory/list/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String getPatientNoteByPatientId(@PathVariable("id") Integer id, Model model){
 
-        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id));
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patient);
         logger.info("GET /patient/patHistory/list/ for id : " + patient.getId() + " OK");
@@ -178,8 +185,8 @@ public class PatientController {
 
     /**
      * Endpoint to display note updating form
-     * @param id
-     * @param model
+     * @param id patient id
+     * @param model update
      * @return patHistory/update
      */
 
@@ -194,15 +201,13 @@ public class PatientController {
         return "/patHistory/update";
     }
 
-    // Update des notes du patient (via micro-service Note)
-
-    /**
+   /**
      * Endpoint to validate the note updating form
-     * @param id
-     * @param noteId
-     * @param note
-     * @param result
-     * @param model
+     * @param id patient id
+     * @param noteId note id
+     * @param note note to update
+     * @param result note list
+     * @param model update
      * @return the list of patients if OK or stay to update if KO
      */
     @PostMapping("/patient/{id}/patHistory/update/{noteId}")
@@ -216,21 +221,67 @@ public class PatientController {
         note.setPatientId(id);
         Note noteUpdated = noteProxy.updateNote(noteId, note);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
-        model.addAttribute("patient",patientService.findById(id).get());
+        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
         logger.info("POST /patient/patHistory/update/ for patient id : " + noteUpdated.getPatientId() + " OK");
         return "/patHistory/list";
     }
 
+
+    /**
+     * Delete a note
+     * @param id : the patient id
+     * @param noteId : the note to delete id
+     * @param model list
+     * @return note list if ok
+     */
     @GetMapping("/patient/{id}/patHistory/delete/{noteId}")
     @ResponseStatus(HttpStatus.OK)
     public String deleteNote(@PathVariable("id") Integer id,@PathVariable("noteId") String noteId, Model model) {
 
         Note noteDeleted = noteProxy.deleteNote(noteId);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
-        model.addAttribute("patient",patientService.findById(id).get());
-        logger.info("GET /patient/patHistory/delete/ for patient id : " + noteDeleted.getPatientId() + " OK");
+        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
+        logger.info("/patient/patHistory/delete/ for patient id : " + noteDeleted.getPatientId() + " OK");
         return "/patHistory/list";
 
+    }
+
+    // Ajout des notes du patient (via micro-service Note)
+
+    /**
+     * Endpoint to display note adding form
+     * @param id : the patient id
+     * @param model add
+     * @return patHistory/add
+     */
+
+    @GetMapping("/patient/patHistory/add/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String ShowAddNote(@PathVariable("id") Integer id, Model model){
+
+        model.addAttribute("note", new Note());
+        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id)));
+        logger.info("GET /patient/patHistory/add/ for patient id : " + id + " OK");
+        return "patHistory/add";
+    }
+
+    /**
+     * Endpoint to validate the note updating form
+     * @param id patient id
+     * @param note note to update
+     * @return the list of patients if OK or stay to update if KO
+     */
+    @GetMapping("/patient/{id}/patHistory/validate")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String addNote(@PathVariable("id") Integer id, @Valid Note note, Model model) {
+
+        note.setId(null);
+        note.setPatientId(id);
+        Note noteAdded = noteProxy.addNote(note);
+        model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
+        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id)));
+        logger.info("GET /patient/patHistory/validate for patient id : " + noteAdded.getPatientId() + " OK");
+        return "patHistory/list";
     }
 
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="utf-8"/>
   <title> Mediscreen App </title>
@@ -16,11 +16,11 @@
     </div>
   </div>
   <p></p>
-  <p class="display-1 blockquote text-center mb-1 bg-primary lead">Updating note</p>
+  <legend class="scheduler-border">Update a note for the patient</legend>
   <p class="row"> <h4> Patient : <span th:text="${patient.get().firstName} + ' ' + ${patient.get().lastName} + ' (' + ${patient.get().birthdate} + ')'"></span></h4><br/></p>
   <p></p>
   <div class="row">
-    <form action="#" th:action="@{/patient/{id}/patHistory/update/{noteId}(id=${patient.get().getId()},noteId=${note.getId()})}" th:object="${note}" method="post" class="form-horizontal" style="width: 100%">
+    <form action="#" th:action="@{/patient/{id}/patHistory/update/{noteId}(id=${patient.get().id},noteId=${note.getId()})}" th:object="${note}" method="post" class="form-horizontal" style="width: 100%">
       <div class="form-group">
         <label for="dateNote" class="col-sm-2 control-label">Date</label>
         <div class="col-sm-10">
@@ -32,14 +32,13 @@
         <label for="textNote" class="col-sm-2 control-label">Text</label>
         <div class="col-sm-10">
           <textarea rows="15" cols="150" type="text" style="width: 100%" required th:field="*{textNote}" id="textNote" placeholder=${note.textNote} class="col-4"></textarea>
-         <!-- <input type="text" style="width: 100%" required th:field="*{textNote}" id="textNote" placeholder=${note.textNote} class="col-4">-->
           <p class="text-danger" th:if="${#fields.hasErrors('textNote')}" th:errors="*{textNote}"></p>
         </div>
       </div>
      <div class="form-group">
         <div class="col-sm-12">
           <input type="hidden" th:field="*{id}">
-          <a class="btn btn-danger btn-sm" href="/patient/list">Cancel</a>
+          <a class="btn btn-danger btn-sm" th:href="@{/patient/patHistory/list/{id}(id=${patient.get().id})}">Cancel</a>
           <input class="btn btn-primary btn-sm" type="submit" value="Update note">
         </div>
       </div>
