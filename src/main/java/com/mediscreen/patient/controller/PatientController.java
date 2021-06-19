@@ -25,16 +25,19 @@ public class PatientController {
     // Pour le log4j2
     final Logger logger = LogManager.getLogger(this.getClass().getName());
 
+    @Autowired
     private PatientService patientService;
-
+    @Autowired
     private NoteProxy noteProxy;
 
 
+
+   /*
     @Autowired
-    public PatientController(PatientService patientService, NoteProxy noteProxy) {
+   public PatientController(PatientService patientService, NoteProxy noteProxy) {
         this.patientService = patientService;
         this.noteProxy = noteProxy;
-    }
+    }*/
 
     public PatientController() {
 
@@ -138,7 +141,7 @@ public class PatientController {
         patientService.savePatient(patient);
         model.addAttribute("patientList", patientService.findAll());
         logger.info("/patient/update ended for : " + patient);
-        return "/patient/list";
+        return "patient/list";
     }
 
     /**
@@ -155,7 +158,7 @@ public class PatientController {
         patientService.deletePatient(patient);
         model.addAttribute("patientList", patientService.findAll());
         logger.info("/patient/delete ended for : " + patient);
-        return "/patient/list";
+        return "patient/list";
     }
 
     // *********************************************  PATIENT's NOTES ***********************************/
@@ -177,7 +180,7 @@ public class PatientController {
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patient);
         logger.info("GET /patient/patHistory/list/ for id : " + patient.getId() + " OK");
-        return "/patHistory/list";
+        return "patHistory/list";
     }
 
 
@@ -198,7 +201,7 @@ public class PatientController {
         model.addAttribute("note",noteToUpdated);
         model.addAttribute("patient",patientService.findById(noteToUpdated.getPatientId()));
         logger.info("GET /patient/patHistory/update/ for patient id : " + noteToUpdated.getPatientId() + " OK");
-        return "/patHistory/update";
+        return "patHistory/update";
     }
 
    /**
@@ -216,14 +219,14 @@ public class PatientController {
 
         if (result.hasErrors()) {
             logger.error("POST /patient/patHistory/update : KO " + result.getAllErrors());
-            return "/patHistory/update";
+            return "patHistory/update";
         }
         note.setPatientId(id);
         Note noteUpdated = noteProxy.updateNote(noteId, note);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
         logger.info("POST /patient/patHistory/update/ for patient id : " + noteUpdated.getPatientId() + " OK");
-        return "/patHistory/list";
+        return "patHistory/list";
     }
 
 
@@ -242,7 +245,7 @@ public class PatientController {
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
         logger.info("/patient/patHistory/delete/ for patient id : " + noteDeleted.getPatientId() + " OK");
-        return "/patHistory/list";
+        return "patHistory/list";
 
     }
 

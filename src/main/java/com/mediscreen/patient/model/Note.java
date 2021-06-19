@@ -20,6 +20,13 @@ public class Note {
     public Note() {
     }
 
+    public Note(String id, String textNote, Integer patientId, LocalDate dateNote) {
+        this.id = id;
+        this.textNote = textNote;
+        this.patientId = patientId;
+        this.dateNote = dateNote;
+    }
+
     public String getId() {
         return id;
     }

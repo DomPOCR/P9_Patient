@@ -2,8 +2,11 @@ package com.mediscreen.patient.UT_controller;
 
 
 import com.mediscreen.patient.controller.PatientController;
+import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.proxies.NoteProxy;
 import com.mediscreen.patient.service.PatientService;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,12 +41,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(PatientController.class)
 public class PatientControllerTest {
 
+    // Constantes pour le jeu de test
+
     String firstNameTest = "James";
     String emptyfirstNameTest = null;
     String lastNameTest = "Bond";
-    // Constantes pour le jeu de test
     String birthdateTest = "01/01/1963";
-    LocalDate birthdateLocal;
+    LocalDate birthdateLocal=LocalDate.of(1963,1,1);
     String genreTest = "M";
     String addressTest = "10 downing St";
     String phoneTest = "0123456789";
@@ -52,6 +56,8 @@ public class PatientControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private PatientService patientService;
+    @MockBean
+    private NoteProxy noteProxy;
 
     @BeforeEach
     public void setUpEach() {
@@ -59,6 +65,8 @@ public class PatientControllerTest {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         birthdateLocal = LocalDate.parse(birthdateTest, df);
     }
+
+    /* **********************************   PATIENT TESTS ******************************************** */
 
     @Test
     public void listPatientTest() throws Exception {
@@ -184,8 +192,8 @@ public class PatientControllerTest {
                 .param("phone", phoneTest)
                 .param("genre", genreTest))
                 .andDo(print())
-                .andExpect(view().name("redirect:/patient/list"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(view().name("patient/list"))
+                .andExpect(status().isOk());
 
         Mockito.verify(patientService, Mockito.times(1)).savePatient(any(Patient.class));
     }
@@ -227,11 +235,35 @@ public class PatientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(view().name("redirect:/patient/list"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(view().name("patient/list"))
+                .andExpect(status().isOk());
 
         Mockito.verify(patientService, Mockito.times(1)).deletePatient(any(Patient.class));
     }
+    /* **********************************   NOTES TESTS ******************************************** */
+
+    /* Show the list of Notes */
+
+    @Test
+    public void listNoteTest() throws Exception {
+
+        List<Note> noteList = new ArrayList<>();
+        Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        Note noteTest = new Note("1","Text note",1,LocalDate.now());
+
+        // GIVEN
+        noteList.add(noteTest);
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
+
+        // WHEN
+        // THEN
+
+        mockMvc.perform(get("/patient/patHistory/list/1"))
+                .andDo(print())
+                .andExpect(view().name("patHistory/list"))
+                .andExpect(status().isOk());
+        }
 
     @Configuration
     static class ContextConfiguration {

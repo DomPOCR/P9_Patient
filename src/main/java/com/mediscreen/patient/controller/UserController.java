@@ -23,12 +23,13 @@ public class UserController {
     // Pour le log4j2
     final Logger logger = LogManager.getLogger(this.getClass().getName());
 
+    @Autowired
     private UserService userService;
 
-    @Autowired
+   /* @Autowired
     public UserController (UserService userService) {
         this.userService = userService;
-    }
+    }*/
 
     public UserController() {
 

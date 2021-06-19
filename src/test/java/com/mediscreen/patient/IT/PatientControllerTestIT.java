@@ -100,8 +100,8 @@ public class PatientControllerTestIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/patient/list"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("patient/list"));
 
         List<Patient> patientsAfterDelete;
         patientsAfterDelete = patientService.findAll();
@@ -126,8 +126,8 @@ public class PatientControllerTestIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(view().name("redirect:/patient/list"));
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("patient/list"));
         } catch (Exception e) {
             assertTrue(e.getMessage().contains("failed"));
         }
