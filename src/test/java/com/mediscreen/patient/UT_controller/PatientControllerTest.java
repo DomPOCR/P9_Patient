@@ -1,12 +1,14 @@
 package com.mediscreen.patient.UT_controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.mediscreen.patient.controller.PatientController;
 import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.proxies.NoteProxy;
 import com.mediscreen.patient.service.PatientService;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,16 +31,18 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-@AutoConfigureMockMvc(addFilters = false)
+
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(PatientController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class PatientControllerTest {
 
     // Constantes pour le jeu de test
@@ -51,6 +55,11 @@ public class PatientControllerTest {
     String genreTest = "M";
     String addressTest = "10 downing St";
     String phoneTest = "0123456789";
+
+    String textNoteTest="Le patient déclare n'avoir aucun problème";
+    LocalDate dateNoteTest=LocalDate.of(2021,6,21);
+
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -245,7 +254,7 @@ public class PatientControllerTest {
     /* Show the list of Notes */
 
     @Test
-    public void listNoteTest() throws Exception {
+    public void listNote() throws Exception {
 
         List<Note> noteList = new ArrayList<>();
         Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
@@ -264,6 +273,120 @@ public class PatientControllerTest {
                 .andExpect(view().name("patHistory/list"))
                 .andExpect(status().isOk());
         }
+
+    /* Display note adding form */
+    @Test
+    public void AddNote_ShowAddForm() throws Exception {
+
+        Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        // GIVEN
+
+        // WHEN
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        // THEN return the add form
+
+        mockMvc.perform(get("/patient/patHistory/add/1"))
+                .andDo(print())
+                .andExpect(view().name("patHistory/add"))
+                .andExpect(status().isOk());
+    }
+
+    /* Validate correct note */
+    @Test
+    public void ValidateNote_CorrectNote() throws Exception {
+
+        List<Note> noteList = new ArrayList<>();
+        Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        Note noteTest = new Note("1","Text note",1,LocalDate.now());
+
+        // GIVEN
+        noteList.add(noteTest);
+        Mockito.when((noteProxy.addNote(noteTest))).thenReturn(noteTest);
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
+
+        // WHEN
+        // THEN
+
+        mockMvc.perform(get("/patient/1/patHistory/validate")
+
+                .param("id", String.valueOf(1))
+                .param("textnote", textNoteTest)
+                .param("patientId", String.valueOf(1))
+                .param("dateNote", String.valueOf(dateNoteTest)))
+                .andDo(print())
+                .andExpect(view().name("patHistory/list"))
+                .andExpect(status().isCreated());
+    }
+
+    /* Show the list of Notes after update */
+
+    @Test
+    public void UpdateNote_CorrectNote() throws Exception {
+
+        List<Note> noteList = new ArrayList<>();
+        Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        Note noteTest = new Note("1","Text note",1,LocalDate.now());
+
+        // GIVEN
+        noteList.add(noteTest);
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
+
+        // WHEN
+        // THEN
+
+        mockMvc.perform(get("/patient/patHistory/list/1")
+                .param("id", String.valueOf(1))
+                .param("textnote", textNoteTest)
+                .param("patientId", String.valueOf(1))
+                .param("dateNote", String.valueOf(dateNoteTest)))
+                .andDo(print())
+                .andExpect(view().name("patHistory/list"))
+                .andExpect(status().isOk());
+    }
+
+    /* Show the list of Notes after delete */
+
+    @Test
+    public void deleteNote_CorrectNote() throws Exception {
+
+        List<Note> noteList = new ArrayList<>();
+        Patient patientTest = new Patient(2,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        Note noteTest = new Note("1","Text note",1,LocalDate.now());
+
+        // GIVEN
+        noteList.add(noteTest);
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(noteProxy.getPatientNoteByPatientId(anyInt())).thenReturn(noteList);
+        // WHEN
+        // THEN
+
+        mockMvc.perform(get("/patient/2/patHistory/delete/1"))
+                .andDo(print())
+                .andExpect(view().name("patHistory/list"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteNote_InCorrectNote() throws Exception {
+
+        Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+
+        // GIVEN
+        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(null);
+
+        // WHEN
+        // THEN
+
+        try {
+            mockMvc.perform(get("/patient/1/patHistory/delete/1"));
+        } catch (Exception e) {
+            assertEquals(e.getMessage(),"patHistory/delete note with 1 not found");
+        }
+
+    }
 
     @Configuration
     static class ContextConfiguration {

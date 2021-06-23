@@ -30,19 +30,6 @@ public class PatientController {
     @Autowired
     private NoteProxy noteProxy;
 
-
-
-   /*
-    @Autowired
-   public PatientController(PatientService patientService, NoteProxy noteProxy) {
-        this.patientService = patientService;
-        this.noteProxy = noteProxy;
-    }*/
-
-    public PatientController() {
-
-    }
-
     // *******************************************  PATIENT ***********************************/
 
 
@@ -225,7 +212,7 @@ public class PatientController {
         Note noteUpdated = noteProxy.updateNote(noteId, note);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
-        logger.info("POST /patient/patHistory/update/ for patient id : " + noteUpdated.getPatientId() + " OK");
+        logger.info("POST /patient/patHistory/update/ for patient id : " + id + " OK");
         return "patHistory/list";
     }
 
@@ -241,12 +228,11 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     public String deleteNote(@PathVariable("id") Integer id,@PathVariable("noteId") String noteId, Model model) {
 
-        Note noteDeleted = noteProxy.deleteNote(noteId);
+        noteProxy.deleteNote(noteId);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
-        logger.info("/patient/patHistory/delete/ for patient id : " + noteDeleted.getPatientId() + " OK");
+        logger.info("/patient/patHistory/delete/ for patient id : " + id + " OK");
         return "patHistory/list";
-
     }
 
     // Ajout des notes du patient (via micro-service Note)
@@ -263,28 +249,32 @@ public class PatientController {
     public String ShowAddNote(@PathVariable("id") Integer id, Model model){
 
         model.addAttribute("note", new Note());
-        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id)));
+        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
         logger.info("GET /patient/patHistory/add/ for patient id : " + id + " OK");
         return "patHistory/add";
     }
 
     /**
      * Endpoint to validate the note updating form
-     * @param id patient id
+     * @param patientId patient id
      * @param note note to update
-     * @return the list of patients if OK or stay to update if KO
+     * @return the list of patients
      */
     @GetMapping("/patient/{id}/patHistory/validate")
     @ResponseStatus(HttpStatus.CREATED)
-    public String addNote(@PathVariable("id") Integer id, @Valid Note note, Model model) {
+    public String addNote(@PathVariable("id") Integer patientId, @Valid Note note,BindingResult result, Model model) {
 
-        note.setId(null);
-        note.setPatientId(id);
-        Note noteAdded = noteProxy.addNote(note);
-        model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
-        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id)));
-        logger.info("GET /patient/patHistory/validate for patient id : " + noteAdded.getPatientId() + " OK");
-        return "patHistory/list";
+        if (!result.hasErrors()) {
+            note.setId(null);
+            note.setPatientId(patientId);
+            Note noteAdded = noteProxy.addNote(note);
+            model.addAttribute("noteList", noteProxy.getPatientNoteByPatientId(patientId));
+            model.addAttribute("patient", patientService.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + patientId)));
+            logger.info("GET /patient/patHistory/validate for patient id : " + patientId + " OK");
+            return "patHistory/list";
+        }
+        logger.error("POST /patient/update : KO " + result.getAllErrors());
+        return "patHistory/add";
     }
 
 
