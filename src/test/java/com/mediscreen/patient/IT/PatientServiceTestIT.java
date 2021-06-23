@@ -3,16 +3,11 @@ package com.mediscreen.patient.IT;
 import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.service.PatientService;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -21,10 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class PatientServiceTestIT {
 

@@ -1,9 +1,6 @@
 package com.mediscreen.patient.UT_controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.mediscreen.patient.controller.PatientController;
 import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
