@@ -61,4 +61,4 @@ build/
 log/
 
 ## mongo data
-/mongo
+mongo/
