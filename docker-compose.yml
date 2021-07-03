@@ -1,18 +1,5 @@
 version: '3'
 services:
-  db:
-    image: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: 'root'
-      MYSQL_DATABASE: 'p9_db'
-      MYSQL_USER: 'p9'
-      MYSQL_PASSWORD: 'p9'
-    ports:
-      - "3306:3306"
-    healthcheck:
-      test: "exit 0"
-    networks:
-      - patient-mysql
   patient:
     image: p9_patient:latest
     container_name: p9_patient
@@ -21,15 +8,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    environment:
-     SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/p9_db?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - patient-mysql
-networks:
-  patient-mysql:
-    driver: bridge
-
-
+  notes:
+    image: p9-notes:latest
+    container_name: p9_note
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"

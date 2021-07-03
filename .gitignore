@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+
 # Package Files #
 *.jar
 *.war
@@ -58,3 +59,6 @@ build/
 
 ### add to ignore logs ###
 log/
+
+## mongo data
+/mongo
