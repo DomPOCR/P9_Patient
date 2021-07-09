@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.mediscreen</groupId>
     <artifactId>P9_Patient</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>P9_Patient</name>
     <description>MEDISCREEN Micro-service Patient and User</description>
 
@@ -20,7 +20,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
         <java.version>1.8</java.version>
         <dep.jacoco.version>0.8.5</dep.jacoco.version>
     </properties>
@@ -72,11 +71,6 @@
             <version>2.0.1.Final</version>
         </dependency>
 
-        <!-- Dependency for jackson -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
         <!-- Dependency for MySQL production DataBase -->
         <dependency>
             <groupId>mysql</groupId>
@@ -257,7 +251,7 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                         </configuration>
                     </execution>
-                    <!-- ajout pour integ -->
+                    <!-- ajout pour integration -->
                     <execution>
                         <id>jacoco-integration</id>
                         <goals>
@@ -336,5 +330,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

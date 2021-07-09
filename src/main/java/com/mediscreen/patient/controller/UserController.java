@@ -16,8 +16,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.validation.Valid;
 
-@CrossOrigin(origins = "*")
 @Controller
+@CrossOrigin(origins = "*")
 public class UserController {
 
     // Pour le log4j2

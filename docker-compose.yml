@@ -1,18 +1,37 @@
 version: '3'
 services:
-  patient:
-    image: p9_patient:latest
-    container_name: p9_patient
+  #mongodb:
+  #  image: mongo
+  #  ports:
+  #  - 27017:27017
+  #  networks:
+  #    - my-network
+  note:
+    depends_on:
+      - patient
+    image: note
+    container_name: note
     build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-  notes:
-    image: p9-notes:latest
-    container_name: p9_note
-    build:
-      context: .
+      context: ../P9_Notes
       dockerfile: Dockerfile
     ports:
       - "8082:8082"
+    restart:  always
+    networks:
+      - my-network
+  patient:
+    image: patient
+    container_name: patient
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart:  always
+    networks:
+      - my-network
+networks:
+  my-network:
+    driver: bridge
+
+
+
