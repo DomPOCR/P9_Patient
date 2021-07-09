@@ -57,7 +57,7 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     public String addPatient(Patient newPatient) {
 
-        logger.info("GET /patient/add : Start");
+        logger.info("GET /patient/add : Start for " + newPatient.toString());
         return "patient/add";
 
     }
@@ -179,7 +179,7 @@ public class PatientController {
 
     @GetMapping("/patient/patHistory/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String ShowUpdateNote(@PathVariable("id") String id, Model model){
+    public String showUpdateNote(@PathVariable("id") String id, Model model){
 
         Note noteToUpdated = noteProxy.getNote(id);
         model.addAttribute("note",noteToUpdated);
@@ -206,7 +206,7 @@ public class PatientController {
             return "patHistory/update";
         }
         note.setPatientId(id);
-        Note noteUpdated = noteProxy.updateNote(noteId, note);
+        noteProxy.updateNote(noteId, note);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
         logger.info("POST /patient/patHistory/update/ for patient id : " + id + " OK");
@@ -243,7 +243,7 @@ public class PatientController {
 
     @GetMapping("/patient/patHistory/add/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public String ShowAddNote(@PathVariable("id") Integer id, Model model){
+    public String showAddNote(@PathVariable("id") Integer id, Model model){
 
         model.addAttribute("note", new Note());
         model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
@@ -264,7 +264,7 @@ public class PatientController {
         if (!result.hasErrors()) {
             note.setId(null);
             note.setPatientId(patientId);
-            Note noteAdded = noteProxy.addNote(note);
+            noteProxy.addNote(note);
             model.addAttribute("noteList", noteProxy.getPatientNoteByPatientId(patientId));
             model.addAttribute("patient", patientService.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + patientId)));
             logger.info("GET /patient/patHistory/validate for patient id : " + patientId + " OK");
