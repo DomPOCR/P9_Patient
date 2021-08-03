@@ -1,7 +1,7 @@
 package com.mediscreen.patient.UT_controller;
 
 
-import com.mediscreen.patient.controller.PatientController;
+import com.mediscreen.patient.web.controller.PatientController;
 import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.proxies.NoteProxy;

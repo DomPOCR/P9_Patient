@@ -30,6 +30,12 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public List<Patient> findByFamilyName(String familyName) {
+        return patientDao.findByLastName(familyName);
+    }
+
+
+    @Override
     public Patient savePatient(Patient patient) {
         return patientDao.save(patient);
     }

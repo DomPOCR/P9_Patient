@@ -22,6 +22,13 @@ public interface PatientService {
     List<Patient> findAll();
 
     /**
+     *
+     * @param familyName
+     * @return list of patient by familyName
+     */
+    List<Patient> findByFamilyName(String familyName);
+
+    /**
      * save patient
      * @param patient
      * @return patient saved

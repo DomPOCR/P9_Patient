@@ -1,9 +1,10 @@
-package com.mediscreen.patient.controller;
+package com.mediscreen.patient.web.controller;
 
 import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.proxies.NoteProxy;
 import com.mediscreen.patient.service.PatientService;
+import com.mediscreen.patient.web.exception.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -41,7 +43,7 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     public String listPatient(Model model) {
         model.addAttribute("patientList", patientService.findAll());
-        logger.info("patient/list : OK");
+        logger.info("**** patient/list : OK");
         return "patient/list";
     }
 
@@ -161,7 +163,8 @@ public class PatientController {
     public String getPatientNoteByPatientId(@PathVariable("id") Integer id, Model model){
 
         Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id));
-        model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
+        List<Note> noteList = noteProxy.getPatientNoteByPatientId(id);
+        model.addAttribute("noteList",noteList);
         model.addAttribute("patient",patient);
         logger.info("GET /patient/patHistory/list/ for id : " + patient.getId() + " OK");
         return "patHistory/list";
