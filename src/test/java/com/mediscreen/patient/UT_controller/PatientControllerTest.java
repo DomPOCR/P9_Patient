@@ -1,11 +1,11 @@
 package com.mediscreen.patient.UT_controller;
 
 
-import com.mediscreen.patient.web.controller.PatientController;
 import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.proxies.NoteProxy;
 import com.mediscreen.patient.service.PatientService;
+import com.mediscreen.patient.web.controller.PatientController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +25,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -43,6 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PatientControllerTest {
 
     // Constantes pour le jeu de test
+
+    private Patient patientTest;
 
     String firstNameTest = "James";
     String emptyfirstNameTest = null;
@@ -73,6 +73,42 @@ public class PatientControllerTest {
     }
 
     /* **********************************   PATIENT TESTS ******************************************** */
+    // TODO test KO
+    @Test
+    public void getPatientByIdTest() throws Exception {
+
+        // GIVEN
+        patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
+
+        // WHEN
+        // THEN
+        mockMvc.perform(get("/patient/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    // TODO test KO
+    @Test
+    public void getPatientByFamilyNameTest() throws Exception {
+
+        // GIVEN
+        List<Patient> patientList = new ArrayList<>();
+        patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        patientList.add(patientTest);
+        Mockito.when(patientService.findByFamilyName(anyString())).thenReturn(patientList);
+
+        // WHEN
+        // THEN
+        mockMvc.perform(get("/patient")
+                        .param("lastName", lastNameTest)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
     @Test
     public void listPatientTest() throws Exception {
@@ -123,7 +159,7 @@ public class PatientControllerTest {
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
 
         // GIVEN
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
 
         // WHEN
         // THEN return the list page
@@ -167,7 +203,7 @@ public class PatientControllerTest {
 
         //GIVEN : Give an exiting patient
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
 
         //WHEN //THEN return the update page
         mockMvc.perform(get("/patient/update/1")
@@ -184,7 +220,7 @@ public class PatientControllerTest {
 
         //GIVEN : Give an exiting patient
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn((patientTest));
 
         //WHEN //THEN return the list page after update
         this.mockMvc.perform(post("/patient/update/1")
@@ -234,7 +270,7 @@ public class PatientControllerTest {
         //GIVEN : Give an exiting Person
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
 
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
 
         //WHEN //THEN return the list page
         mockMvc.perform(get("/patient/delete/1")
@@ -259,7 +295,7 @@ public class PatientControllerTest {
 
         // GIVEN
         noteList.add(noteTest);
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
 
         // WHEN
@@ -279,7 +315,7 @@ public class PatientControllerTest {
         // GIVEN
 
         // WHEN
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         // THEN return the add form
 
         mockMvc.perform(get("/patient/patHistory/add/1"))
@@ -299,7 +335,7 @@ public class PatientControllerTest {
         // GIVEN
         noteList.add(noteTest);
         Mockito.when((noteProxy.addNote(noteTest))).thenReturn(noteTest);
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
 
         // WHEN
@@ -327,7 +363,7 @@ public class PatientControllerTest {
 
         // GIVEN
         noteList.add(noteTest);
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
 
         // WHEN
@@ -354,7 +390,7 @@ public class PatientControllerTest {
 
         // GIVEN
         noteList.add(noteTest);
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(anyInt())).thenReturn(noteList);
         // WHEN
         // THEN
@@ -371,7 +407,7 @@ public class PatientControllerTest {
         Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
 
         // GIVEN
-        Mockito.when(patientService.findById(anyInt())).thenReturn(Optional.of(patientTest));
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(null);
 
         // WHEN

@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -20,7 +20,11 @@ public class PatientRestController {
     final Logger logger = LogManager.getLogger(this.getClass().getName());
 
     @Autowired
-    private PatientService patientService;
+    private final PatientService patientService;
+
+    public PatientRestController(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
     // Liste des patients par leur id
 
@@ -31,13 +35,14 @@ public class PatientRestController {
      * @throws NotFoundException
      */
 
-    @GetMapping(value = "patient/{id}")
+    @GetMapping(value = "/patient/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional getPatientById(@PathVariable Integer id) throws NotFoundException {
+    public Patient getPatientById(@PathVariable Integer id) throws NotFoundException {
 
-        Optional resultPatient = patientService.findById(id);
-        if (resultPatient == null) {
-
+        Patient resultPatient;
+        try {
+            resultPatient = patientService.findById(id);
+        } catch (NoSuchElementException e) {
             logger.warn("The patient id : " + id + " does not exist");
             throw new NotFoundException("The patient whith id : " + id + " does not exist");
         }
@@ -52,7 +57,7 @@ public class PatientRestController {
      * @return patient list
      * @throws NotFoundException
      */
-    @GetMapping(value = "patient/familyname/{familyName}")
+    @GetMapping(value = "/patient/familyname/{familyName}")
     @ResponseStatus(HttpStatus.OK)
     public List<Patient> getPatientByFamilyName(@PathVariable String familyName) throws NotFoundException {
 

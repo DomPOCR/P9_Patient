@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -48,7 +49,7 @@ public class PatientController {
     }
 
 
-   // Ajout d'un patient
+    // Ajout d'un patient
 
     /**
      * Add patient
@@ -97,9 +98,13 @@ public class PatientController {
     @GetMapping("/patient/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id));
-        model.addAttribute("patient", patient);
-        logger.info("GET /patient/update : OK");
+        try {
+            Patient patient = patientService.findById(id);
+            model.addAttribute("patient", patient);
+            logger.info("GET /patient/update : OK");
+        } catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("Invalid patient Id:" + id);
+        }
         return "patient/update";
     }
 
@@ -140,10 +145,16 @@ public class PatientController {
     @GetMapping("/patient/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String deletePatient(@PathVariable("id") Integer id, Model model) {
-        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id));
-        patientService.deletePatient(patient);
-        model.addAttribute("patientList", patientService.findAll());
-        logger.info("/patient/delete ended for : " + patient);
+
+        try {
+            Patient patient = patientService.findById(id);
+            patientService.deletePatient(patient);
+            model.addAttribute("patientList", patientService.findAll());
+            logger.info("/patient/delete ended for : " + patient);
+
+        } catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("Invalid patient Id:" + id);
+        }
         return "patient/list";
     }
 
@@ -162,11 +173,15 @@ public class PatientController {
     @ResponseStatus(HttpStatus.OK)
     public String getPatientNoteByPatientId(@PathVariable("id") Integer id, Model model){
 
-        Patient patient = patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id));
-        List<Note> noteList = noteProxy.getPatientNoteByPatientId(id);
-        model.addAttribute("noteList",noteList);
-        model.addAttribute("patient",patient);
-        logger.info("GET /patient/patHistory/list/ for id : " + patient.getId() + " OK");
+        try {
+            Patient patient = patientService.findById(id);
+            List<Note> noteList = noteProxy.getPatientNoteByPatientId(id);
+            model.addAttribute("noteList",noteList);
+            model.addAttribute("patient",patient);
+            logger.info("GET /patient/patHistory/list/ for id : " + patient.getId() + " OK");
+        } catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("Invalid patient Id:" + id);
+        }
         return "patHistory/list";
     }
 
@@ -191,7 +206,7 @@ public class PatientController {
         return "patHistory/update";
     }
 
-   /**
+    /**
      * Endpoint to validate the note updating form
      * @param id patient id
      * @param noteId note id
@@ -211,7 +226,7 @@ public class PatientController {
         note.setPatientId(id);
         noteProxy.updateNote(noteId, note);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
-        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
+        model.addAttribute("patient",patientService.findById(id));
         logger.info("POST /patient/patHistory/update/ for patient id : " + id + " OK");
         return "patHistory/list";
     }
@@ -230,8 +245,13 @@ public class PatientController {
 
         noteProxy.deleteNote(noteId);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
-        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
-        logger.info("/patient/patHistory/delete/ for patient id : " + id + " OK");
+        try {
+            Patient patient = patientService.findById(id);
+            model.addAttribute("patient",patient);
+            logger.info("/patient/patHistory/delete/ for patient id : " + id + " OK");
+        } catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("Invalid patient Id:" + id);
+        }
         return "patHistory/list";
     }
 
@@ -249,8 +269,13 @@ public class PatientController {
     public String showAddNote(@PathVariable("id") Integer id, Model model){
 
         model.addAttribute("note", new Note());
-        model.addAttribute("patient",patientService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + id)));
-        logger.info("GET /patient/patHistory/add/ for patient id : " + id + " OK");
+        try {
+            Patient patient = patientService.findById(id);
+            model.addAttribute("patient",patient);
+            logger.info("GET /patient/patHistory/add/ for patient id : " + id + " OK");
+        } catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("Invalid patient Id:" + id);
+        }
         return "patHistory/add";
     }
 
@@ -269,8 +294,13 @@ public class PatientController {
             note.setPatientId(patientId);
             noteProxy.addNote(note);
             model.addAttribute("noteList", noteProxy.getPatientNoteByPatientId(patientId));
-            model.addAttribute("patient", patientService.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Invalid patient Id:" + patientId)));
-            logger.info("GET /patient/patHistory/validate for patient id : " + patientId + " OK");
+            try {
+                Patient patient = patientService.findById(patientId);
+                model.addAttribute("patient", patient);
+                logger.info("GET /patient/patHistory/validate for patient id : " + patientId + " OK");
+            } catch (NoSuchElementException e) {
+                throw new IllegalArgumentException("Invalid patient Id:" + patientId);
+            }
             return "patHistory/list";
         }
         logger.error("POST /patient/update : KO " + result.getAllErrors());

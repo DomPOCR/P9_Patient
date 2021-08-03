@@ -4,6 +4,7 @@ import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public interface PatientService {
@@ -13,7 +14,7 @@ public interface PatientService {
      * @param id
      * @return patient
      */
-    Optional<Patient> findById(int id);
+    Patient findById(int id) throws NoSuchElementException;
 
     /**
      * get the list of patient

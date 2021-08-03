@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -20,8 +21,8 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Optional<Patient> findById(int id) {
-        return patientDao.findById(id);
+    public Patient findById(int id) throws NoSuchElementException {
+        return patientDao.findById(id).orElseThrow(() -> new NoSuchElementException("The patient id : " + id + " does not exist"));
     }
 
     @Override
