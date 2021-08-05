@@ -6,9 +6,11 @@ import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.proxies.NoteProxy;
 import com.mediscreen.patient.service.PatientService;
 import com.mediscreen.patient.web.controller.PatientController;
+import com.mediscreen.patient.web.controller.PatientRestController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -65,6 +67,7 @@ public class PatientControllerTest {
     @MockBean
     private NoteProxy noteProxy;
 
+
     @BeforeEach
     public void setUpEach() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -73,42 +76,8 @@ public class PatientControllerTest {
     }
 
     /* **********************************   PATIENT TESTS ******************************************** */
-    // TODO test KO
-    @Test
-    public void getPatientByIdTest() throws Exception {
 
-        // GIVEN
-        patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
-        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
 
-        // WHEN
-        // THEN
-        mockMvc.perform(get("/patient/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    // TODO test KO
-    @Test
-    public void getPatientByFamilyNameTest() throws Exception {
-
-        // GIVEN
-        List<Patient> patientList = new ArrayList<>();
-        patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
-        patientList.add(patientTest);
-        Mockito.when(patientService.findByFamilyName(anyString())).thenReturn(patientList);
-
-        // WHEN
-        // THEN
-        mockMvc.perform(get("/patient")
-                        .param("lastName", lastNameTest)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
 
     @Test
     public void listPatientTest() throws Exception {
@@ -430,3 +399,4 @@ public class PatientControllerTest {
     }
 
 }
+

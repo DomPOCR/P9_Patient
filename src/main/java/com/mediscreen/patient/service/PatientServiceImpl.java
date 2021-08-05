@@ -16,6 +16,7 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientDao patientDao;
 
+    @Autowired
     public PatientServiceImpl(PatientDao patientDao) {
         this.patientDao = patientDao;
     }
