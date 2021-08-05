@@ -1,10 +1,11 @@
 package com.mediscreen.patient.web.controller;
 
+import com.mediscreen.patient.model.Assessment;
 import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.proxies.AssessmentProxy;
 import com.mediscreen.patient.proxies.NoteProxy;
 import com.mediscreen.patient.service.PatientService;
-import com.mediscreen.patient.web.exception.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class PatientController {
     private PatientService patientService;
     @Autowired
     private NoteProxy noteProxy;
+    @Autowired
+    private AssessmentProxy assessmentProxy;
 
     // *******************************************  PATIENT ***********************************/
 
@@ -176,8 +179,10 @@ public class PatientController {
         try {
             Patient patient = patientService.findById(id);
             List<Note> noteList = noteProxy.getPatientNoteByPatientId(id);
+            Assessment assessment = assessmentProxy.getAssessmentByPatientId(id);
             model.addAttribute("noteList",noteList);
             model.addAttribute("patient",patient);
+            model.addAttribute("assessment",assessment);
             logger.info("GET /patient/patHistory/list/ for id : " + patient.getId() + " OK");
         } catch (NoSuchElementException e) {
             throw new IllegalArgumentException("Invalid patient Id:" + id);
@@ -227,6 +232,7 @@ public class PatientController {
         noteProxy.updateNote(noteId, note);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
         model.addAttribute("patient",patientService.findById(id));
+        model.addAttribute("assessment",assessmentProxy.getAssessmentByPatientId(id));
         logger.info("POST /patient/patHistory/update/ for patient id : " + id + " OK");
         return "patHistory/list";
     }
@@ -245,6 +251,7 @@ public class PatientController {
 
         noteProxy.deleteNote(noteId);
         model.addAttribute("noteList",noteProxy.getPatientNoteByPatientId(id));
+        model.addAttribute("assessment",assessmentProxy.getAssessmentByPatientId(id));
         try {
             Patient patient = patientService.findById(id);
             model.addAttribute("patient",patient);
@@ -294,6 +301,7 @@ public class PatientController {
             note.setPatientId(patientId);
             noteProxy.addNote(note);
             model.addAttribute("noteList", noteProxy.getPatientNoteByPatientId(patientId));
+            model.addAttribute("assessment",assessmentProxy.getAssessmentByPatientId(patientId));
             try {
                 Patient patient = patientService.findById(patientId);
                 model.addAttribute("patient", patient);
