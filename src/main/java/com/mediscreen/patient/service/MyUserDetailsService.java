@@ -10,12 +10,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    private UserDao userDao;
+    private final UserDao userDao;
 
     @Autowired
     public MyUserDetailsService (UserDao userDao) {
@@ -36,8 +36,7 @@ public class MyUserDetailsService implements UserDetailsService {
         }
 
         GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
-        UserDetails userDetails = (UserDetails)new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(), Arrays.asList(authority));
-        return userDetails;
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), Collections.singletonList(authority));
     }
 }

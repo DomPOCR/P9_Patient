@@ -30,6 +30,19 @@ services:
     restart:  always
     networks:
       - my-network
+  assessment:
+    depends_on:
+      - patient
+    image: assessment
+    container_name: assessment
+    build:
+      context: ../P9_assessments
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    restart: always
+    networks:
+      - my-network
 networks:
   my-network:
     driver: bridge

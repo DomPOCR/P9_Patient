@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private MyUserDetailsService myUserDetailsService;
+    private final MyUserDetailsService myUserDetailsService;
 
     @Autowired
     public SpringSecurityConfig (MyUserDetailsService myUserDetailsService) {

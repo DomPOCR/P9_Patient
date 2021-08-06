@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //@FeignClient(name = "note", url = "http://localhost:8082",configuration = FeignClientConfiguration.class)
-@FeignClient(name = "note", url = "http://localhost:8082")
+@FeignClient(name = "note", url = "http://note:8082")
 public interface NoteProxy {
 
     @GetMapping(value = "/patHistory/list")
