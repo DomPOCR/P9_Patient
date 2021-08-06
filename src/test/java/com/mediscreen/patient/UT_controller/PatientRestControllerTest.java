@@ -2,7 +2,6 @@ package com.mediscreen.patient.UT_controller;
 
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.service.PatientService;
-import com.mediscreen.patient.web.controller.PatientController;
 import com.mediscreen.patient.web.controller.PatientRestController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,16 +39,12 @@ public class PatientRestControllerTest {
     private Patient patientTest;
 
     String firstNameTest = "James";
-    String emptyfirstNameTest = null;
     String lastNameTest = "Bond";
     String birthdateTest = "01/01/1963";
     LocalDate birthdateLocal = LocalDate.of(1963, 1, 1);
     String genreTest = "M";
     String addressTest = "10 downing St";
     String phoneTest = "0123456789";
-
-    String textNoteTest = "Le patient déclare n'avoir aucun problème";
-    LocalDate dateNoteTest = LocalDate.of(2021, 6, 21);
 
 
     @Autowired
@@ -60,13 +54,12 @@ public class PatientRestControllerTest {
 
     @BeforeEach
     public void setUpEach() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         birthdateLocal = LocalDate.parse(birthdateTest, df);
     }
 
     /* **********************************   PATIENT TESTS ******************************************** */
-    // TODO test KO
+
     @Test
     public void getPatientByIdTest() throws Exception {
 
@@ -83,7 +76,7 @@ public class PatientRestControllerTest {
                .andExpect(status().isOk());
     }
 
-    // TODO test KO
+
     @Test
     public void getPatientByFamilyNameTest() throws Exception {
 
