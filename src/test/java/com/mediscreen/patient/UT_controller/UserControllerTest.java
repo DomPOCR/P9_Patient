@@ -1,6 +1,6 @@
 package com.mediscreen.patient.UT_controller;
 
-import com.mediscreen.patient.controller.UserController;
+import com.mediscreen.patient.web.controller.UserController;
 import com.mediscreen.patient.model.User;
 import com.mediscreen.patient.service.UserService;
 import org.junit.jupiter.api.Test;

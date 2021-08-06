@@ -84,6 +84,7 @@ public class PatientControllerTestIT {
 
     /*------------------------------ Get ------------------------------*/
 
+
     @Test
     void deletePatient_ExistingPatient() throws Exception{
 

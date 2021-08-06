@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   #mongodb:
   #  image: mongo
@@ -6,6 +6,17 @@ services:
   #  - 27017:27017
   #  networks:
   #    - my-network
+  patient:
+    image: patient
+    container_name: patient
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - my-network
   note:
     depends_on:
       - patient
@@ -19,14 +30,17 @@ services:
     restart:  always
     networks:
       - my-network
-  patient:
-    image: patient
-    container_name: patient
+  assessment:
+    depends_on:
+      - patient
+    image: assessment
+    container_name: assessment
     build:
+      context: ../P9_assessments
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
-    restart:  always
+      - "8083:8083"
+    restart: always
     networks:
       - my-network
 networks:
