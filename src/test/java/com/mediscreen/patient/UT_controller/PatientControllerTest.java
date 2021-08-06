@@ -1,16 +1,15 @@
 package com.mediscreen.patient.UT_controller;
 
-
+import com.mediscreen.patient.model.Assessment;
 import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.proxies.AssessmentProxy;
 import com.mediscreen.patient.proxies.NoteProxy;
 import com.mediscreen.patient.service.PatientService;
 import com.mediscreen.patient.web.controller.PatientController;
-import com.mediscreen.patient.web.controller.PatientRestController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,14 +21,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,9 +41,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 public class PatientControllerTest {
 
-    // Constantes pour le jeu de test
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private PatientService patientService;
+    @MockBean
+    private NoteProxy noteProxy;
+    @MockBean
+    private AssessmentProxy assessmentProxy;
 
-    private Patient patientTest;
+    // Constantes pour le jeu de test
 
     String firstNameTest = "James";
     String emptyfirstNameTest = null;
@@ -59,18 +65,9 @@ public class PatientControllerTest {
     LocalDate dateNoteTest=LocalDate.of(2021,6,21);
 
 
-
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
-    private PatientService patientService;
-    @MockBean
-    private NoteProxy noteProxy;
-
-
     @BeforeEach
     public void setUpEach() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         birthdateLocal = LocalDate.parse(birthdateTest, df);
     }
@@ -261,11 +258,13 @@ public class PatientControllerTest {
         List<Note> noteList = new ArrayList<>();
         Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
         Note noteTest = new Note("1","Text note",1,LocalDate.now());
+        Assessment assessmentTest = new Assessment(1,firstNameTest,lastNameTest,20,genreTest,1,"None");
 
         // GIVEN
         noteList.add(noteTest);
         Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
+        Mockito.when(assessmentProxy.getAssessmentByPatientId(patientTest.getId())).thenReturn(assessmentTest);
 
         // WHEN
         // THEN
@@ -300,12 +299,14 @@ public class PatientControllerTest {
         List<Note> noteList = new ArrayList<>();
         Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
         Note noteTest = new Note("1","Text note",1,LocalDate.now());
+        Assessment assessmentTest = new Assessment(1,firstNameTest,lastNameTest,20,genreTest,1,"None");
 
         // GIVEN
         noteList.add(noteTest);
         Mockito.when((noteProxy.addNote(noteTest))).thenReturn(noteTest);
         Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
+        Mockito.when(assessmentProxy.getAssessmentByPatientId(patientTest.getId())).thenReturn(assessmentTest);
 
         // WHEN
         // THEN
@@ -329,11 +330,13 @@ public class PatientControllerTest {
         List<Note> noteList = new ArrayList<>();
         Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
         Note noteTest = new Note("1","Text note",1,LocalDate.now());
+        Assessment assessmentTest = new Assessment(1,firstNameTest,lastNameTest,20,genreTest,1,"None");
 
         // GIVEN
         noteList.add(noteTest);
         Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(noteList);
+        Mockito.when(assessmentProxy.getAssessmentByPatientId(patientTest.getId())).thenReturn(assessmentTest);
 
         // WHEN
         // THEN
@@ -356,11 +359,14 @@ public class PatientControllerTest {
         List<Note> noteList = new ArrayList<>();
         Patient patientTest = new Patient(2,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
         Note noteTest = new Note("1","Text note",1,LocalDate.now());
+        Assessment assessmentTest = new Assessment(1,firstNameTest,lastNameTest,20,genreTest,1,"None");
 
         // GIVEN
         noteList.add(noteTest);
         Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(anyInt())).thenReturn(noteList);
+        Mockito.when(assessmentProxy.getAssessmentByPatientId(patientTest.getId())).thenReturn(assessmentTest);
+
         // WHEN
         // THEN
 
@@ -374,10 +380,12 @@ public class PatientControllerTest {
     public void deleteNote_InCorrectNote() throws Exception {
 
         Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        Assessment assessmentTest = new Assessment(1,firstNameTest,lastNameTest,20,genreTest,1,"None");
 
         // GIVEN
         Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
         Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(null);
+        Mockito.when(assessmentProxy.getAssessmentByPatientId(patientTest.getId())).thenReturn(assessmentTest);
 
         // WHEN
         // THEN
@@ -389,7 +397,6 @@ public class PatientControllerTest {
         }
 
     }
-
     @Configuration
     static class ContextConfiguration {
         @Bean
