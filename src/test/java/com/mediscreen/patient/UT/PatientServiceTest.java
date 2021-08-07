@@ -1,4 +1,4 @@
-package com.mediscreen.patient.IT;
+package com.mediscreen.patient.UT;
 
 import com.mediscreen.patient.dao.PatientDao;
 import com.mediscreen.patient.model.Patient;
@@ -14,12 +14,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class PatientServiceTestIT {
+public class PatientServiceTest {
 
     @MockBean
     PatientDao patientDao;
@@ -75,5 +78,60 @@ public class PatientServiceTestIT {
         //THEN
         assertThat(patientService.findAll().size()).isEqualTo(1);
     }
+
+    // Find by id
+    @Test
+    public void findById_existingPatientId(){
+        //GIVEN
+        when(patientDao.findById(0)).thenReturn(java.util.Optional.ofNullable(patient));
+
+        //WHEN
+        Patient patientResult =  patientService.findById(0);
+        //THEN
+        assertThat(patientResult).isNotNull();
+    }
+
+    @Test
+    public void findById_inexistingPatientId(){
+        //GIVEN
+        when(patientDao.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(null));
+
+        //WHEN THEN
+        try {
+            Patient patientResult =  patientService.findById(0);
+        } catch (NoSuchElementException e) {
+            assertThat(e.getMessage().contains("The patient id 0 does not exist"));
+        }
+
+
+    }
+    // Find by Family name
+
+    @Test
+    public void findByFamilyName_existingFamilyNamePatient_patientListIsReturn(){
+        //GIVEN
+        List<Patient> patientList = new ArrayList<>();
+        patientList.add(patient);
+        when(patientDao.findByLastName (anyString())).thenReturn(patientList);
+
+        //WHEN
+        List<Patient> patientListResult =  patientService.findByFamilyName("Bauer");
+        //THEN
+        assertThat(patientListResult).isNotNull();
+        assertThat(patientListResult.size()).isEqualTo(patientList.size());
+    }
+
+    @Test
+    public void findByFamilyName_inexistingFamilyNamePatient_patientListIsReturn(){
+        //GIVEN
+
+        when(patientDao.findByLastName (anyString())).thenReturn(null);
+
+        //WHEN
+        List<Patient> patientListResult =  patientService.findByFamilyName("Ghost");
+        //THEN
+        assertThat(patientListResult).isNull();
+    }
+
 }
 

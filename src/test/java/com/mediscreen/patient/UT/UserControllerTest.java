@@ -1,4 +1,4 @@
-package com.mediscreen.patient.UT_controller;
+package com.mediscreen.patient.UT;
 
 import com.mediscreen.patient.web.controller.UserController;
 import com.mediscreen.patient.model.User;
