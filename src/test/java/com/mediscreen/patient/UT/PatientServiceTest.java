@@ -38,7 +38,7 @@ public class PatientServiceTest {
 
     // Save
     @Test
-    public void savePatient() {
+    public void savePatientTest() {
 
         //GIVEN
 
@@ -51,7 +51,7 @@ public class PatientServiceTest {
 
     // Delete
     @Test
-    public void deletePatient() {
+    public void deletePatientTest() {
 
         //GIVEN
         List<Patient> patientList = new ArrayList<>();
@@ -66,7 +66,7 @@ public class PatientServiceTest {
 
     // Find
     @Test
-     public void findAllPatient() {
+     public void findAllPatientTest() {
 
         //GIVEN
         List<Patient> patientList = new ArrayList<>();
@@ -81,7 +81,7 @@ public class PatientServiceTest {
 
     // Find by id
     @Test
-    public void findById_existingPatientId(){
+    public void findById_existingPatientIdTest(){
         //GIVEN
         when(patientDao.findById(0)).thenReturn(java.util.Optional.ofNullable(patient));
 
@@ -92,7 +92,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void findById_inexistingPatientId(){
+    public void findById_inexistingPatientIdTest(){
         //GIVEN
         when(patientDao.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(null));
 
@@ -108,7 +108,7 @@ public class PatientServiceTest {
     // Find by Family name
 
     @Test
-    public void findByFamilyName_existingFamilyNamePatient_patientListIsReturn(){
+    public void findByFamilyName_existingFamilyNamePatient_patientListIsReturnTest(){
         //GIVEN
         List<Patient> patientList = new ArrayList<>();
         patientList.add(patient);
@@ -122,7 +122,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void findByFamilyName_inexistingFamilyNamePatient_patientListIsReturn(){
+    public void findByFamilyName_inexistingFamilyNamePatient_patientListIsReturnTest(){
         //GIVEN
 
         when(patientDao.findByLastName (anyString())).thenReturn(null);
