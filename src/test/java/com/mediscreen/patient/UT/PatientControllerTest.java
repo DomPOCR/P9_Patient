@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,6 +42,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 public class PatientControllerTest {
 
+    String firstNameTest = "James";
+    String emptyfirstNameTest = null;
+    String lastNameTest = "Bond";
+    String birthdateTest = "01/01/1963";
+
+    // Constantes pour le jeu de test
+    LocalDate birthdateLocal=LocalDate.of(1963,1,1);
+    String genreTest = "M";
+    String addressTest = "10 downing St";
+    String phoneTest = "0123456789";
+    String textNoteTest="Le patient déclare n'avoir aucun problème";
+    LocalDate dateNoteTest=LocalDate.of(2021,6,21);
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -49,21 +62,6 @@ public class PatientControllerTest {
     private NoteProxy noteProxy;
     @MockBean
     private AssessmentProxy assessmentProxy;
-
-    // Constantes pour le jeu de test
-
-    String firstNameTest = "James";
-    String emptyfirstNameTest = null;
-    String lastNameTest = "Bond";
-    String birthdateTest = "01/01/1963";
-    LocalDate birthdateLocal=LocalDate.of(1963,1,1);
-    String genreTest = "M";
-    String addressTest = "10 downing St";
-    String phoneTest = "0123456789";
-
-    String textNoteTest="Le patient déclare n'avoir aucun problème";
-    LocalDate dateNoteTest=LocalDate.of(2021,6,21);
-
 
     @BeforeEach
     public void setUpEach() {
@@ -90,8 +88,8 @@ public class PatientControllerTest {
         // THEN
 
         mockMvc.perform(get("/patient/list")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(view().name("patient/list"))
                 .andExpect(status().isOk());
@@ -109,8 +107,8 @@ public class PatientControllerTest {
         // THEN return the add page
 
         mockMvc.perform(get("/patient/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(view().name("patient/add"))
                 .andExpect(status().isOk());
@@ -130,15 +128,15 @@ public class PatientControllerTest {
         // WHEN
         // THEN return the list page
         mockMvc.perform(post("/patient/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .param("id", String.valueOf(1))
-                .param("firstName", firstNameTest)
-                .param("lastName", lastNameTest)
-                .param("address", addressTest)
-                .param("birthdate", String.valueOf(birthdateLocal))
-                .param("phone", phoneTest)
-                .param("genre", genreTest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("id", String.valueOf(1))
+                        .param("firstName", firstNameTest)
+                        .param("lastName", lastNameTest)
+                        .param("address", addressTest)
+                        .param("birthdate", String.valueOf(birthdateLocal))
+                        .param("phone", phoneTest)
+                        .param("genre", genreTest))
                 .andDo(print())
                 .andExpect(view().name("redirect:/patient/list"))
                 .andExpect(status().is3xxRedirection());
@@ -173,8 +171,8 @@ public class PatientControllerTest {
 
         //WHEN //THEN return the update page
         mockMvc.perform(get("/patient/update/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("patient/update"));
@@ -190,15 +188,15 @@ public class PatientControllerTest {
 
         //WHEN //THEN return the list page after update
         this.mockMvc.perform(post("/patient/update/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .param("id", String.valueOf(1))
-                .param("firstName", firstNameTest)
-                .param("lastName", lastNameTest)
-                .param("address", addressTest)
-                .param("birthdate", String.valueOf(birthdateLocal))
-                .param("phone", phoneTest)
-                .param("genre", genreTest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("id", String.valueOf(1))
+                        .param("firstName", firstNameTest)
+                        .param("lastName", lastNameTest)
+                        .param("address", addressTest)
+                        .param("birthdate", String.valueOf(birthdateLocal))
+                        .param("phone", phoneTest)
+                        .param("genre", genreTest))
                 .andDo(print())
                 .andExpect(view().name("patient/list"))
                 .andExpect(status().isOk());
@@ -240,8 +238,8 @@ public class PatientControllerTest {
 
         //WHEN //THEN return the list page
         mockMvc.perform(get("/patient/delete/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(view().name("patient/list"))
                 .andExpect(status().isOk());
@@ -273,7 +271,7 @@ public class PatientControllerTest {
                 .andDo(print())
                 .andExpect(view().name("patHistory/list"))
                 .andExpect(status().isOk());
-        }
+    }
 
     /* Display note adding form */
     @Test
@@ -312,16 +310,38 @@ public class PatientControllerTest {
         // THEN
 
         mockMvc.perform(get("/patient/1/patHistory/validate")
-
-                .param("id", String.valueOf(1))
-                .param("textnote", textNoteTest)
-                .param("patientId", String.valueOf(1))
-                .param("dateNote", String.valueOf(dateNoteTest)))
+                        .param("id", String.valueOf(1))
+                        .param("textnote", textNoteTest)
+                        .param("patientId", String.valueOf(1))
+                        .param("dateNote", String.valueOf(dateNoteTest)))
                 .andDo(print())
                 .andExpect(view().name("patHistory/list"))
                 .andExpect(status().isCreated());
     }
 
+    /* Display note adding form */
+    @Test
+    public void UpdateNote_ShowUpdateForm() throws Exception {
+
+        Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        Note noteTest = new Note("1","Text note",1,LocalDate.now());
+
+        // GIVEN
+
+        // WHEN
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
+        Mockito.when(noteProxy.getNote(noteTest.getId())).thenReturn(noteTest);
+        // THEN return the update form
+
+        mockMvc.perform(get("/patient/patHistory/update/" + noteTest.getId())
+                        .param("id", String.valueOf(noteTest.getId()))
+                        .param("firstName", patientTest.getFirstName())
+                        .param("lastName", patientTest.getLastName())
+                        .param("birthdate", String.valueOf(patientTest.getBirthdate())))
+                        .andDo(print())
+                .andExpect(view().name("patHistory/update"))
+                .andExpect(status().isOk());
+    }
     /* Show the list of Notes after update */
 
     @Test
@@ -341,7 +361,7 @@ public class PatientControllerTest {
         // WHEN
         // THEN
 
-        mockMvc.perform(get("/patient/patHistory/list/1")
+        mockMvc.perform(post("/patient/1/patHistory/update/1")
                 .param("id", String.valueOf(1))
                 .param("textnote", textNoteTest)
                 .param("patientId", String.valueOf(1))
@@ -349,6 +369,27 @@ public class PatientControllerTest {
                 .andDo(print())
                 .andExpect(view().name("patHistory/list"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void UpdateNote_InCorrectNote() throws Exception {
+
+        Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
+        Assessment assessmentTest = new Assessment(1,firstNameTest,lastNameTest,20,genreTest,1,"None");
+
+        // GIVEN
+        Mockito.when(patientService.findById(anyInt())).thenReturn(patientTest);
+        Mockito.when(noteProxy.getPatientNoteByPatientId(patientTest.getId())).thenReturn(null);
+        Mockito.when(assessmentProxy.getAssessmentByPatientId(patientTest.getId())).thenReturn(assessmentTest);
+
+        // WHEN
+        // THEN
+
+        try {
+            mockMvc.perform(post("/patient/1/patHistory/update/1"));
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("POST /patient/patHistory/update : KO "));
+        }
     }
 
     /* Show the list of Notes after delete */

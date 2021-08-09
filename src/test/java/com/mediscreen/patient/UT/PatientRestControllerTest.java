@@ -22,9 +22,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,7 +77,21 @@ public class PatientRestControllerTest {
                .andDo(print())
                .andExpect(status().isOk());
     }
+    /* Validate incorrect patient */
+    @Test
+    public void getPatientByIdIncorrectIdTest() throws Exception {
 
+        // GIVEN : patient not found
+        Mockito.when(patientService.findById(anyInt())).thenReturn(null);
+
+        // WHEN
+        // THEN
+        try {
+            this.mockMvc.perform(post("/patient/1"));
+        } catch (Exception e) {
+            assertEquals(e.getMessage(), "The patient whith id : 1 does not exist");
+        }
+    }
 
     @Test
     public void getPatientByFamilyNameTest() throws Exception {
@@ -92,6 +108,22 @@ public class PatientRestControllerTest {
               /* .param("familyName", lastNameTest))*/
                .andDo(print())
                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getPatientByFamilyNameIncorrectNameTest() throws Exception {
+
+        // GIVEN
+
+        Mockito.when(patientService.findByFamilyName(anyString())).thenReturn(null);
+
+        // WHEN
+        // THEN
+        try {
+            mockMvc.perform(get("/patient/familyname/" + lastNameTest));
+        } catch (Exception e) {
+            assertEquals(e.getMessage(),"The patient whith family name : " + lastNameTest + " does not exist");
+        }
     }
 
     @Configuration
