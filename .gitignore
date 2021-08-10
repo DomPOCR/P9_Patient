@@ -13,6 +13,7 @@ target/
 *.zip
 *.tar.gz
 *.rar
+*.bat
 
 ### STS ###
 .apt_generated
