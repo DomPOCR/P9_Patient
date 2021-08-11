@@ -9,7 +9,7 @@ public interface PatientService {
 
     /**
      * get a patient by Id
-     * @param id
+     * @param id patient id
      * @return patient
      */
     Patient findById(int id) throws NoSuchElementException;
@@ -22,21 +22,21 @@ public interface PatientService {
 
     /**
      *
-     * @param familyName
+     * @param familyName name of family
      * @return list of patient by familyName
      */
     List<Patient> findByFamilyName(String familyName);
 
     /**
      * save patient
-     * @param patient
+     * @param patient patient to save
      * @return patient saved
      */
     Patient savePatient(Patient patient);
 
     /**
      * delete patient
-     * @param patient
+     * @param patient patient to delete
      * @return patient deleted
      */
     Patient deletePatient(Patient patient);

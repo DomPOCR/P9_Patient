@@ -9,7 +9,7 @@ public interface UserService {
 
     /**
      * get a user by Id
-     * @param id
+     * @param id user id
      * @return user
      */
     Optional<User> findById(int id);
@@ -22,14 +22,14 @@ public interface UserService {
 
     /**
      * save user
-     * @param user
+     * @param user user to save
      * @return user saved
      */
     User saveUser(User user);
 
     /**
      * delete user
-     * @param user
+     * @param user user to delete
      * @return user deleted
      */
     User deleteUser(User user);

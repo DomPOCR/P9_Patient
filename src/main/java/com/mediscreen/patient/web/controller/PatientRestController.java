@@ -26,9 +26,9 @@ public class PatientRestController {
 
     /**
      *
-     * @param id
+     * @param id Patient Id
      * @return patient
-     * @throws NotFoundException
+     * @throws NotFoundException if patient not found
      */
 
     @GetMapping(value = "/patient/{id}")
@@ -49,9 +49,9 @@ public class PatientRestController {
 
     /**
      *
-     * @param familyName
+     * @param familyName Name of family
      * @return patient list
-     * @throws NotFoundException
+     * @throws NotFoundException if family name not exist
      */
     @GetMapping(value = "/patient/familyname/{familyName}")
     @ResponseStatus(HttpStatus.OK)

@@ -26,10 +26,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-   /* @Autowired
-    public UserController (UserService userService) {
-        this.userService = userService;
-    }*/
 
     public UserController() {
 
@@ -38,7 +34,7 @@ public class UserController {
     /**
      * HomePage
      *
-     * @param model
+     * @param model Thymeleaf model
      * @return HomePage
      */
     @GetMapping("/home")
@@ -50,7 +46,7 @@ public class UserController {
     /**
      * Endpoint to show the list of user
      *
-     * @param model
+     * @param model Thymeleaf model
      * @return the user list
      */
     @GetMapping(value ="/user/list")
@@ -85,7 +81,7 @@ public class UserController {
     }
 
     /**
-     * @param user
+     * @param user user to be added
      * @return Add user page
      */
     @GetMapping(value ="user/add")
@@ -116,8 +112,8 @@ public class UserController {
     /**
      * Endpoint to validate the user updating form
      *
-     * @param id
-     * @param user   the user id
+     * @param id user id
+     * @param user   user to update
      * @param result technical result
      * @param model  public interface model, model can be accessed and attributes can be added
      * @return user/list if ok or user/update if ko

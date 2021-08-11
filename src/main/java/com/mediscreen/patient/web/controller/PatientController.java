@@ -41,9 +41,9 @@ public class PatientController {
     // Liste des patients
 
     /**
-     * get patient list
      *
-     * @return patients list
+     * @param model Thymeleaf model
+     * @return patient/list
      */
     @GetMapping(value = "/patient/list")
     @ResponseStatus(HttpStatus.OK)
@@ -289,9 +289,12 @@ public class PatientController {
     }
 
     /**
+     *
      * Endpoint to validate the note updating form
      * @param patientId patient id
      * @param note note to update
+     * @param result note list
+     * @param model update
      * @return the list of patients
      */
     @GetMapping("/patient/{id}/patHistory/validate")

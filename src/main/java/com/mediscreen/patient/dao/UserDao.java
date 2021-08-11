@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface UserDao extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
     /**
      *
-     * @param userName
-     * @return
+     * @param userName user name
+     * @return user found
      */
     User findByUsername(String userName);
 }
