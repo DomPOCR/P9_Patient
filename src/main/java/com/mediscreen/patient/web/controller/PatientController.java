@@ -313,7 +313,7 @@ public class PatientController {
             }
             return "patHistory/list";
         }
-        logger.error("POST /patient/update : KO " + result.getAllErrors());
+        logger.error("GET /patient/update : KO " + result.getAllErrors());
         return "patHistory/add";
     }
 
