@@ -16,7 +16,7 @@ Micro-service Patient manage patients informations on MEDISCREEN Application.
 
 - 127.0.0.1 patient
 - 127.0.0.1 note
-  127.0.0.1 assessment
+- 127.0.0.1 assessment
 
 ## Run app (localhost:8080)
 
