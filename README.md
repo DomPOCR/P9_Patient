@@ -12,7 +12,7 @@ Micro-service Patient manage patients informations on MEDISCREEN Application.
 
 # Installation
 
-## Modifie host file :
+## Modify host file :
 
 - 127.0.0.1 patient
 - 127.0.0.1 note
