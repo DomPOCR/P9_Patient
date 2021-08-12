@@ -22,7 +22,7 @@ public class PatientRestController {
     @Autowired
     private PatientService patientService;
 
-    // Liste des patients par id
+    // Patient par id
 
     /**
      *
