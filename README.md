@@ -38,7 +38,7 @@ To remove the image :
 ~~~
 docker rmi -f p9_patient
 ~~~
-# URL
+ 
 ## HOME PAGE
 - http://patient:8080/home
 
