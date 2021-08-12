@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+
 # Package Files #
 *.jar
 *.war
@@ -12,6 +13,7 @@ target/
 *.zip
 *.tar.gz
 *.rar
+*.bat
 
 ### STS ###
 .apt_generated
@@ -58,3 +60,6 @@ build/
 
 ### add to ignore logs ###
 log/
+
+## mongo data
+mongo/

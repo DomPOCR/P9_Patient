@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="utf-8"/>
   <title> Mediscreen App </title>
@@ -47,8 +47,7 @@
           <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')" th:href="@{/patient/delete/{id}(id=${patient.id})}">Delete</a>
         </td>
         <td class="margin-right: 5px">
-          <a class="btn btn-primary btn-sm" >Notes</a>
-          <a class="btn btn-primary btn-sm" >Assess</a>
+          <a class="btn btn-primary btn-sm" th:href="@{/patient/patHistory/list/{id}(id=${patient.id})}">Notes</a>
         </td>
       </tr>
       </tbody>

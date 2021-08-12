@@ -1,16 +1,12 @@
 package com.mediscreen.patient.config;
 
+import org.passay.LengthRule;
+import org.passay.PasswordData;
+import org.passay.PasswordValidator;
+import org.passay.RuleResult;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import org.passay.CharacterRule;
-import org.passay.EnglishCharacterData;
-import org.passay.LengthRule;
-import org.passay.PasswordValidator;
-import org.passay.PasswordData;
-import org.passay.RuleResult;
-import org.passay.WhitespaceRule;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
