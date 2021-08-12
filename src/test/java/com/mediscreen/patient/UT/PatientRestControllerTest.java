@@ -79,7 +79,7 @@ public class PatientRestControllerTest {
     }
     /* Validate incorrect patient */
     @Test
-    public void getPatientByIdIncorrectIdTest() throws Exception {
+    public void getPatientByIdIncorrectIdTest() {
 
         // GIVEN : patient not found
         Mockito.when(patientService.findById(anyInt())).thenReturn(null);
@@ -111,7 +111,7 @@ public class PatientRestControllerTest {
     }
 
     @Test
-    public void getPatientByFamilyNameIncorrectNameTest() throws Exception {
+    public void getPatientByFamilyNameIncorrectNameTest() {
 
         // GIVEN
 

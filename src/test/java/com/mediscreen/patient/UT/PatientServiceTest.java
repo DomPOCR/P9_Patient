@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class PatientServiceTest {
     @Autowired
     PatientService patientService;
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     LocalDate birthdateLocal = LocalDate.parse("31/12/1999", df);
 

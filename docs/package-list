@@ -1,10 +1,7 @@
-com.mediscreen.patient
-com.mediscreen.patient.IT
-com.mediscreen.patient.UT
-com.mediscreen.patient.config
-com.mediscreen.patient.dao
-com.mediscreen.patient.model
-com.mediscreen.patient.proxies
-com.mediscreen.patient.service
-com.mediscreen.patient.web.controller
-com.mediscreen.patient.web.exception
+com.mediscreen.notes
+com.mediscreen.notes.config
+com.mediscreen.notes.dao
+com.mediscreen.notes.model
+com.mediscreen.notes.service
+com.mediscreen.notes.web.controller
+com.mediscreen.notes.web.exception

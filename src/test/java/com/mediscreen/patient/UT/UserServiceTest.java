@@ -1,7 +1,6 @@
 package com.mediscreen.patient.UT;
 
 import com.mediscreen.patient.dao.UserDao;
-import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.model.User;
 import com.mediscreen.patient.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -12,11 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest

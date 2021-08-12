@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -34,7 +33,6 @@ public class PatientControllerTestIT {
 
     String firstNameTest = "James";
     String lastNameTest = "Bond";
-    String emptyfirstNameTest = null;
     // Constantes pour le jeu de test
     String birthdateTest = "01/01/1963";
     LocalDate birthdateLocal = null;
@@ -44,7 +42,7 @@ public class PatientControllerTestIT {
 
     @BeforeEach
     public void setUpEach() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         birthdateLocal = LocalDate.parse(birthdateTest, df);
     }
@@ -52,7 +50,7 @@ public class PatientControllerTestIT {
 
     /* Add validate patient */
     @Test
-    void addPatient_ValidatePatient() throws Exception{
+    void addPatient_ValidatePatient() throws Exception {
 
         List<Patient> patientsBeforeAdd;
         patientsBeforeAdd = patientService.findAll();
@@ -62,22 +60,22 @@ public class PatientControllerTestIT {
         // WHEN
         // THEN
         mockMvc.perform(MockMvcRequestBuilders.post("/patient/validate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .param("id", String.valueOf(1))
-                .param("firstName", firstNameTest)
-                .param("lastName", lastNameTest)
-                .param("address", addressTest)
-                .param("birthdate", String.valueOf(birthdateLocal))
-                .param("phone", phoneTest)
-                .param("genre", genreTest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("id", String.valueOf(1))
+                        .param("firstName", firstNameTest)
+                        .param("lastName", lastNameTest)
+                        .param("address", addressTest)
+                        .param("birthdate", String.valueOf(birthdateLocal))
+                        .param("phone", phoneTest)
+                        .param("genre", genreTest))
                 .andDo(print())
                 .andExpect(view().name("redirect:/patient/list"));
 
         List<Patient> patientsAfterAdd;
         patientsAfterAdd = patientService.findAll();
 
-        assertEquals(patientsAfterAdd.size(),patientsBeforeAdd.size()+1);
+        assertEquals(patientsAfterAdd.size(), patientsBeforeAdd.size() + 1);
     }
 
 
@@ -86,7 +84,7 @@ public class PatientControllerTestIT {
 
 
     @Test
-    void deletePatient_ExistingPatient() throws Exception{
+    void deletePatient_ExistingPatient() throws Exception {
 
         //GIVEN
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
@@ -98,8 +96,8 @@ public class PatientControllerTestIT {
         // WHEN
         // THEN
         mockMvc.perform(MockMvcRequestBuilders.get("/patient/delete/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("patient/list"));
@@ -107,11 +105,11 @@ public class PatientControllerTestIT {
         List<Patient> patientsAfterDelete;
         patientsAfterDelete = patientService.findAll();
 
-        assertEquals(patientsAfterDelete.size(),patientsBeforeDelete.size()-1);
+        assertEquals(patientsAfterDelete.size(), patientsBeforeDelete.size() - 1);
     }
 
     @Test
-    void deletePatient_Non_ExistingPatient() throws Exception{
+    void deletePatient_Non_ExistingPatient() {
 
         //GIVEN
         Patient patientTest = new Patient(firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
@@ -124,8 +122,8 @@ public class PatientControllerTestIT {
         // THEN
         try {
             mockMvc.perform(MockMvcRequestBuilders.get("/patient/delete/999")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(view().name("patient/list"));
@@ -135,7 +133,7 @@ public class PatientControllerTestIT {
         List<Patient> patientsAfterDelete;
         patientsAfterDelete = patientService.findAll();
 
-        assertEquals(patientsAfterDelete.size(),patientsBeforeDelete.size());
+        assertEquals(patientsAfterDelete.size(), patientsBeforeDelete.size());
     }
 
 }

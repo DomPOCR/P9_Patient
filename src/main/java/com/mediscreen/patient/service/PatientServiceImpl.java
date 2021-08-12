@@ -1,15 +1,12 @@
 package com.mediscreen.patient.service;
 
 import com.mediscreen.patient.dao.PatientDao;
-import com.mediscreen.patient.model.Note;
 import com.mediscreen.patient.model.Patient;
-import com.mediscreen.patient.proxies.NoteProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class PatientServiceImpl implements PatientService {

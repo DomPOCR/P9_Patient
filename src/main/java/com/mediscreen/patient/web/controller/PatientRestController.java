@@ -22,7 +22,7 @@ public class PatientRestController {
     @Autowired
     private PatientService patientService;
 
-    // Liste des patients par leur id
+    // Liste des patients par id
 
     /**
      *
@@ -45,7 +45,7 @@ public class PatientRestController {
         logger.info("getPatientById " + id + " Ok");
         return resultPatient;
     }
-    // Liste des patients par leur nom de famille
+    // Liste des patients par nom de famille
 
     /**
      *

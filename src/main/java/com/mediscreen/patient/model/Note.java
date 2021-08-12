@@ -1,9 +1,7 @@
 package com.mediscreen.patient.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.GeneratedValue;
 import java.time.LocalDate;
 
 public class Note {

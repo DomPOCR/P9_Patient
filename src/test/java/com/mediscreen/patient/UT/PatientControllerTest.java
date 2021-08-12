@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PatientControllerTest {
 
     String firstNameTest = "James";
-    String emptyfirstNameTest = null;
+    String emptyFirstNameTest = null;
     String lastNameTest = "Bond";
     String birthdateTest = "01/01/1963";
 
@@ -146,7 +146,7 @@ public class PatientControllerTest {
 
     /* Validate incorrect patient */
     @Test
-    public void validatePatientReturnNotOKTest() throws Exception {
+    public void validatePatientReturnNotOKTest()  {
 
         // GIVEN : patient not found
         Mockito.when(patientService.findById(anyInt())).thenReturn(null);
@@ -206,7 +206,7 @@ public class PatientControllerTest {
 
     /* Update incorrect patient  */
     @Test
-    void updatePatient_InCorrectPatient() throws Exception {
+    void updatePatient_InCorrectPatient()  {
 
         //GIVEN : Patient not found
         Mockito.when(patientService.findById(anyInt())).thenReturn(null);
@@ -216,7 +216,7 @@ public class PatientControllerTest {
 
         try {
             this.mockMvc.perform(post("/patient/update/1")
-                    .param("firstName", emptyfirstNameTest)
+                    .param("firstName", emptyFirstNameTest)
                     .param("lastName", lastNameTest)
                     .param("address", addressTest)
                     .param("birthdate", String.valueOf(birthdateLocal))
@@ -372,7 +372,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void UpdateNote_InCorrectNote() throws Exception {
+    public void UpdateNote_InCorrectNote()  {
 
         Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
         Assessment assessmentTest = new Assessment(1,firstNameTest,lastNameTest,20,genreTest,1,"None");
@@ -418,7 +418,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    public void deleteNote_InCorrectNote() throws Exception {
+    public void deleteNote_InCorrectNote() {
 
         Patient patientTest = new Patient(1,firstNameTest, lastNameTest, addressTest, birthdateLocal, phoneTest, genreTest);
         Assessment assessmentTest = new Assessment(1,firstNameTest,lastNameTest,20,genreTest,1,"None");
