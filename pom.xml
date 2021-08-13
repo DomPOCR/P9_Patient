@@ -159,6 +159,7 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.7</version>
             </plugin>
+            <!-- Plugin for surefire report -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -185,6 +186,11 @@
                     </excludes>
                 </configuration>
             </plugin>
+        <!-- Plugin for failsafe report-->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+        </plugin>
             <!-- Plugin for jacoco report -->
             <plugin>
                 <groupId>org.jacoco</groupId>
