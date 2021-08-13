@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">P9_Patient : Tests d'intégration</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.patient.web.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.mediscreen.patient.web.controller;
+
+import com.mediscreen.patient.model.User;
+
+import com.mediscreen.patient.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.validation.Valid;
+
+@Controller
+@CrossOrigin(origins = &quot;*&quot;)
+public class UserController {
+
+    // Pour le log4j2
+<span class="fc" id="L24">    final Logger logger = LogManager.getLogger(this.getClass().getName());</span>
+
+    @Autowired
+    private UserService userService;
+
+
+<span class="fc" id="L30">    public UserController() {</span>
+
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * HomePage
+     *
+     * @param model Thymeleaf model
+     * @return HomePage
+     */
+    @GetMapping(&quot;/home&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String home(Model model) {
+<span class="nc" id="L43">        return &quot;home&quot;;</span>
+    }
+
+    /**
+     * Endpoint to show the list of user
+     *
+     * @param model Thymeleaf model
+     * @return the user list
+     */
+    @GetMapping(value =&quot;/user/list&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String listUser(Model model) {
+<span class="nc" id="L55">        model.addAttribute(&quot;userList&quot;, userService.findAll());</span>
+<span class="nc" id="L56">        logger.info(&quot;user/list : OK&quot;);</span>
+<span class="nc" id="L57">        return &quot;user/list&quot;;</span>
+    }
+
+    /**
+     * Endpoint to validate the info of user
+     *
+     * @param user,  user to be added
+     * @param result technical result
+     * @param model  public interface model, model can be accessed and attributes can be added
+     * @return user/list if OK or stay user/add if KO
+     */
+    @PostMapping(&quot;/user/validate&quot;)
+    public String validate(@Valid User user, BindingResult result, Model model) {
+
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (!result.hasErrors()) {</span>
+<span class="fc" id="L72">            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();</span>
+<span class="fc" id="L73">            user.setPassword(encoder.encode(user.getPassword()));</span>
+<span class="fc" id="L74">            userService.saveUser(user);</span>
+<span class="fc" id="L75">            model.addAttribute(&quot;users&quot;, userService.findAll());</span>
+<span class="fc" id="L76">            logger.info(&quot;user/validate : ended for user : &quot; + user.toString());</span>
+<span class="fc" id="L77">            return &quot;redirect:/user/list&quot;;</span>
+        }
+<span class="fc" id="L79">        logger.error(&quot;user/validate : error for user : &quot; + user.toString());</span>
+<span class="fc" id="L80">        return &quot;user/add&quot;;</span>
+    }
+
+    /**
+     * @param user user to be added
+     * @return Add user page
+     */
+    @GetMapping(value =&quot;user/add&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String addUser(User user) {
+<span class="nc" id="L90">        logger.info(&quot;GET /user/add : Start&quot;);</span>
+<span class="nc" id="L91">        return &quot;user/add&quot;;</span>
+    }
+
+    /**
+     * Endpoint to display user updating form
+     *
+     * @param id    the user id
+     * @param model public interface model, model can be accessed and attributes can be added
+     * @return user/update if OK
+     */
+    @GetMapping(&quot;/user/update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+
+<span class="nc" id="L104">        logger.info(&quot;showUpdateForm start for id &quot; + id);</span>
+<span class="nc" id="L105">        User user = userService.findById(id).orElseThrow(() -&gt; new IllegalArgumentException(&quot;Invalid user Id:&quot; + id));</span>
+<span class="nc" id="L106">        user.setPassword(&quot;&quot;);</span>
+<span class="nc" id="L107">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L108">        logger.info(&quot;showUpdateForm ended for id &quot; + id);</span>
+<span class="nc" id="L109">        return &quot;user/update&quot;;</span>
+    }
+
+    /**
+     * Endpoint to validate the user updating form
+     *
+     * @param id user id
+     * @param user   user to update
+     * @param result technical result
+     * @param model  public interface model, model can be accessed and attributes can be added
+     * @return user/list if ok or user/update if ko
+     */
+    @PostMapping(&quot;/user/update/{id}&quot;)
+    public String updateUser(@PathVariable(&quot;id&quot;) Integer id, @Valid User user,
+                             BindingResult result, Model model) {
+
+<span class="nc" id="L125">        user.setId(id);</span>
+
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L128">            String error = result.getFieldErrors().get(0).getDefaultMessage();</span>
+<span class="nc" id="L129">            String field = result.getFieldErrors().get(0).getField();</span>
+<span class="nc" id="L130">            logger.error(&quot;trade/update : error for user : &quot; + user.toString() + &quot; : &quot; + field + &quot; &quot; + error);</span>
+<span class="nc" id="L131">            return &quot;user/update&quot;;</span>
+        }
+
+<span class="nc" id="L134">        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();</span>
+<span class="nc" id="L135">        user.setPassword(encoder.encode(user.getPassword()));</span>
+
+<span class="nc" id="L137">        userService.saveUser(user);</span>
+<span class="nc" id="L138">        model.addAttribute(&quot;users&quot;, userService.findAll());</span>
+<span class="nc" id="L139">        logger.info(&quot;user//update : ended for user :&quot; + user.toString());</span>
+<span class="nc" id="L140">        return &quot;redirect:/user/list&quot;;</span>
+    }
+
+    /**
+     * Endpoint to delete a user
+     *
+     * @param id    the user id to delete
+     * @param model public interface model, model can be accessed and attributes can be added
+     * @return user/list if ok
+     */
+    @GetMapping(&quot;/user/delete/{id}&quot;)
+    public String deleteUser(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+
+<span class="fc" id="L153">        logger.info(&quot;delete user start for id &quot; + id);</span>
+<span class="fc" id="L154">        User user = userService.findById(id).orElseThrow(() -&gt; new IllegalArgumentException(&quot;Invalid user Id:&quot; + id));</span>
+<span class="fc" id="L155">        userService.deleteUser(user);</span>
+<span class="fc" id="L156">        model.addAttribute(&quot;users&quot;, userService.findAll());</span>
+<span class="fc" id="L157">        logger.info(&quot;user/delete ended for : &quot; + user.toString());</span>
+<span class="fc" id="L158">        return &quot;redirect:/user/list&quot;;</span>
+    }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

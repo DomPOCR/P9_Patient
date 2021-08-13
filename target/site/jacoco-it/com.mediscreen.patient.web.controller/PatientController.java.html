@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">P9_Patient : Tests d'intégration</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.patient.web.controller</a> &gt; <span class="el_source">PatientController.java</span></div><h1>PatientController.java</h1><pre class="source lang-java linenums">package com.mediscreen.patient.web.controller;
+
+import com.mediscreen.patient.model.Assessment;
+import com.mediscreen.patient.model.Note;
+import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.proxies.AssessmentProxy;
+import com.mediscreen.patient.proxies.NoteProxy;
+import com.mediscreen.patient.service.PatientService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+@Controller
+@CrossOrigin(origins = &quot;*&quot;)
+<span class="fc" id="L24">public class PatientController {</span>
+
+    // Pour le log4j2
+<span class="fc" id="L27">    final Logger logger = LogManager.getLogger(this.getClass().getName());</span>
+
+    @Autowired
+    private PatientService patientService;
+    @Autowired
+    private NoteProxy noteProxy;
+    @Autowired
+    private AssessmentProxy assessmentProxy;
+
+
+
+    // *******************************************  PATIENT ***********************************/
+
+
+    // Liste des patients
+
+    /**
+     *
+     * @param model Thymeleaf model
+     * @return patient/list
+     */
+    @GetMapping(value = &quot;/patient/list&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String listPatient(Model model) {
+<span class="nc" id="L51">        model.addAttribute(&quot;patientList&quot;, patientService.findAll());</span>
+<span class="nc" id="L52">        logger.info(&quot;**** patient/list : OK&quot;);</span>
+<span class="nc" id="L53">        return &quot;patient/list&quot;;</span>
+    }
+
+
+    // Ajout d'un patient
+
+    /**
+     * Add patient
+     * @param newPatient : patient to add
+     * @return the form to add patient
+     */
+    @GetMapping(value = &quot;patient/add&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String addPatient(Patient newPatient) {
+
+<span class="nc" id="L68">        logger.info(&quot;GET /patient/add : Start for &quot; + newPatient.toString());</span>
+<span class="nc" id="L69">        return &quot;patient/add&quot;;</span>
+
+    }
+
+    /**
+     * Endpoint to validate the info of patient
+     *
+     * @param patient, patient to be added
+     * @param result   technical result
+     * @param model    public interface model, model can be accessed and attributes can be added
+     * @return the form to add patient
+     */
+    @PostMapping(&quot;/patient/validate&quot;)
+    public String validate(@Valid Patient patient, BindingResult result, Model model) {
+
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (!result.hasErrors()) {</span>
+<span class="fc" id="L85">            patientService.savePatient(patient);</span>
+<span class="fc" id="L86">            model.addAttribute(&quot;patientList&quot;, patientService.findAll());</span>
+<span class="fc" id="L87">            logger.info(&quot;POST /patient/validate : OK&quot; + patient.toString());</span>
+<span class="fc" id="L88">            return &quot;redirect:/patient/list&quot;;</span>
+        }
+<span class="nc" id="L90">        logger.error(&quot;/patient/validate : KO&quot; + patient.toString());</span>
+<span class="nc" id="L91">        return &quot;patient/add&quot;;</span>
+    }
+
+    // Mise à jour Patient
+
+    /**
+     * Endpoint to display patient updating form
+     *
+     * @param id    the patient id
+     * @param model public interface model, model can be accessed and attributes can be added
+     * @return patient/update if OK
+     */
+    @GetMapping(&quot;/patient/update/{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+        try {
+<span class="nc" id="L107">            Patient patient = patientService.findById(id);</span>
+<span class="nc" id="L108">            model.addAttribute(&quot;patient&quot;, patient);</span>
+<span class="nc" id="L109">            logger.info(&quot;GET /patient/update : OK&quot;);</span>
+<span class="nc" id="L110">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L111">            throw new IllegalArgumentException(&quot;Invalid patient Id:&quot; + id);</span>
+<span class="nc" id="L112">        }</span>
+<span class="nc" id="L113">        return &quot;patient/update&quot;;</span>
+    }
+
+    /**
+     * Endpoint to validate the patient updating form
+     *
+     * @param id the patient id
+     * @param patient the patient informations
+     * @param result  technical result
+     * @param model   public interface model, model can be accessed and attributes can be added
+     * @return patient/list if ok or patient/update if ko
+     */
+    @PostMapping(&quot;/patient/update/{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String updatePatient(@PathVariable(&quot;id&quot;) Integer id, @Valid Patient patient,
+                                BindingResult result, Model model) {
+
+<span class="nc" id="L130">        patient.setId(id);</span>
+
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L133">            logger.error(&quot;POST /patient/update : KO &quot; + result.getAllErrors());</span>
+<span class="nc" id="L134">            return &quot;patient/update&quot;;</span>
+        }
+
+<span class="nc" id="L137">        patientService.savePatient(patient);</span>
+<span class="nc" id="L138">        model.addAttribute(&quot;patientList&quot;, patientService.findAll());</span>
+<span class="nc" id="L139">        logger.info(&quot;/patient/update ended for : &quot; + patient);</span>
+<span class="nc" id="L140">        return &quot;patient/list&quot;;</span>
+    }
+
+    /**
+     * Endpoint to delete a patient
+     *
+     * @param id    the patient id to delete
+     * @param model public interface model, model can be accessed and attributes can be added
+     * @return patient/list if ok
+     */
+    @GetMapping(&quot;/patient/delete/{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String deletePatient(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+
+        try {
+<span class="fc" id="L155">            Patient patient = patientService.findById(id);</span>
+<span class="fc" id="L156">            patientService.deletePatient(patient);</span>
+<span class="fc" id="L157">            model.addAttribute(&quot;patientList&quot;, patientService.findAll());</span>
+<span class="fc" id="L158">            logger.info(&quot;/patient/delete ended for : &quot; + patient);</span>
+
+<span class="fc" id="L160">        } catch (NoSuchElementException e) {</span>
+<span class="fc" id="L161">            throw new IllegalArgumentException(&quot;Invalid patient Id:&quot; + id);</span>
+<span class="fc" id="L162">        }</span>
+<span class="fc" id="L163">        return &quot;patient/list&quot;;</span>
+    }
+
+    // *********************************************  PATIENT's NOTES ***********************************/
+
+    // Liste des notes du patient (via micro-service Note)
+
+    /**
+     *
+     * @param id patient id
+     * @param model add
+     * @return patient notes list
+     */
+
+    @GetMapping(&quot;/patient/patHistory/list/{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String getPatientNoteByPatientId(@PathVariable(&quot;id&quot;) Integer id, Model model){
+
+        try {
+<span class="nc" id="L182">            Patient patient = patientService.findById(id);</span>
+<span class="nc" id="L183">            List&lt;Note&gt; noteList = noteProxy.getPatientNoteByPatientId(id);</span>
+<span class="nc" id="L184">            Assessment assessment = assessmentProxy.getAssessmentByPatientId(id);</span>
+<span class="nc" id="L185">            model.addAttribute(&quot;noteList&quot;,noteList);</span>
+<span class="nc" id="L186">            model.addAttribute(&quot;patient&quot;,patient);</span>
+<span class="nc" id="L187">            model.addAttribute(&quot;assessment&quot;,assessment);</span>
+<span class="nc" id="L188">            logger.info(&quot;GET /patient/patHistory/list/ for id : &quot; + patient.getId() + &quot; OK&quot;);</span>
+<span class="nc" id="L189">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L190">            throw new IllegalArgumentException(&quot;Invalid patient Id:&quot; + id);</span>
+<span class="nc" id="L191">        }</span>
+<span class="nc" id="L192">        return &quot;patHistory/list&quot;;</span>
+    }
+
+
+    // Update des notes du patient (via micro-service Note)
+
+    /**
+     * Endpoint to display note updating form
+     * @param id patient id
+     * @param model update
+     * @return patHistory/update
+     */
+
+    @GetMapping(&quot;/patient/patHistory/update/{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String showUpdateNote(@PathVariable(&quot;id&quot;) String id, Model model){
+
+<span class="nc" id="L209">        Note noteToUpdated = noteProxy.getNote(id);</span>
+<span class="nc" id="L210">        model.addAttribute(&quot;note&quot;,noteToUpdated);</span>
+<span class="nc" id="L211">        model.addAttribute(&quot;patient&quot;,patientService.findById(noteToUpdated.getPatientId()));</span>
+<span class="nc" id="L212">        logger.info(&quot;GET /patient/patHistory/update/ for patient id : &quot; + noteToUpdated.getPatientId() + &quot; OK&quot;);</span>
+<span class="nc" id="L213">        return &quot;patHistory/update&quot;;</span>
+    }
+
+    /**
+     * Endpoint to validate the note updating form
+     * @param id patient id
+     * @param noteId note id
+     * @param note note to update
+     * @param result note list
+     * @param model update
+     * @return the list of patients if OK or stay to update if KO
+     */
+    @PostMapping(&quot;/patient/{id}/patHistory/update/{noteId}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String updateNote(@PathVariable(&quot;id&quot;) Integer id,@PathVariable(&quot;noteId&quot;) String noteId, @Valid Note note, BindingResult result, Model model) {
+
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L230">            logger.error(&quot;POST /patient/patHistory/update : KO &quot; + result.getAllErrors());</span>
+<span class="nc" id="L231">            return &quot;patHistory/update&quot;;</span>
+        }
+<span class="nc" id="L233">        note.setPatientId(id);</span>
+<span class="nc" id="L234">        noteProxy.updateNote(noteId, note);</span>
+<span class="nc" id="L235">        model.addAttribute(&quot;noteList&quot;,noteProxy.getPatientNoteByPatientId(id));</span>
+<span class="nc" id="L236">        model.addAttribute(&quot;patient&quot;,patientService.findById(id));</span>
+<span class="nc" id="L237">        model.addAttribute(&quot;assessment&quot;,assessmentProxy.getAssessmentByPatientId(id));</span>
+<span class="nc" id="L238">        logger.info(&quot;POST /patient/patHistory/update/ for patient id : &quot; + id + &quot; OK&quot;);</span>
+<span class="nc" id="L239">        return &quot;patHistory/list&quot;;</span>
+    }
+
+
+    /**
+     * Delete a note
+     * @param id : the patient id
+     * @param noteId : the note to delete id
+     * @param model list
+     * @return note list if ok
+     */
+    @GetMapping(&quot;/patient/{id}/patHistory/delete/{noteId}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteNote(@PathVariable(&quot;id&quot;) Integer id,@PathVariable(&quot;noteId&quot;) String noteId, Model model) {
+
+<span class="nc" id="L254">        noteProxy.deleteNote(noteId);</span>
+<span class="nc" id="L255">        model.addAttribute(&quot;noteList&quot;,noteProxy.getPatientNoteByPatientId(id));</span>
+<span class="nc" id="L256">        model.addAttribute(&quot;assessment&quot;,assessmentProxy.getAssessmentByPatientId(id));</span>
+        try {
+<span class="nc" id="L258">            Patient patient = patientService.findById(id);</span>
+<span class="nc" id="L259">            model.addAttribute(&quot;patient&quot;,patient);</span>
+<span class="nc" id="L260">            logger.info(&quot;/patient/patHistory/delete/ for patient id : &quot; + id + &quot; OK&quot;);</span>
+<span class="nc" id="L261">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L262">            throw new IllegalArgumentException(&quot;Invalid patient Id:&quot; + id);</span>
+<span class="nc" id="L263">        }</span>
+<span class="nc" id="L264">        return &quot;patHistory/list&quot;;</span>
+    }
+
+    // Ajout des notes du patient (via micro-service Note)
+
+    /**
+     * Endpoint to display note adding form
+     * @param id : the patient id
+     * @param model add
+     * @return patHistory/add
+     */
+
+    @GetMapping(&quot;/patient/patHistory/add/{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public String showAddNote(@PathVariable(&quot;id&quot;) Integer id, Model model){
+
+<span class="nc" id="L280">        model.addAttribute(&quot;note&quot;, new Note());</span>
+        try {
+<span class="nc" id="L282">            Patient patient = patientService.findById(id);</span>
+<span class="nc" id="L283">            model.addAttribute(&quot;patient&quot;,patient);</span>
+<span class="nc" id="L284">            logger.info(&quot;GET /patient/patHistory/add/ for patient id : &quot; + id + &quot; OK&quot;);</span>
+<span class="nc" id="L285">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L286">            throw new IllegalArgumentException(&quot;Invalid patient Id:&quot; + id);</span>
+<span class="nc" id="L287">        }</span>
+<span class="nc" id="L288">        return &quot;patHistory/add&quot;;</span>
+    }
+
+    /**
+     *
+     * Endpoint to validate the note updating form
+     * @param patientId patient id
+     * @param note note to update
+     * @param result note list
+     * @param model update
+     * @return the list of patients
+     */
+    @GetMapping(&quot;/patient/{id}/patHistory/validate&quot;)
+    @ResponseStatus(HttpStatus.CREATED)
+    public String addNote(@PathVariable(&quot;id&quot;) Integer patientId, @Valid Note note,BindingResult result, Model model) {
+
+<span class="nc bnc" id="L304" title="All 2 branches missed.">        if (!result.hasErrors()) {</span>
+<span class="nc" id="L305">            note.setId(null);</span>
+<span class="nc" id="L306">            note.setPatientId(patientId);</span>
+<span class="nc" id="L307">            noteProxy.addNote(note);</span>
+<span class="nc" id="L308">            model.addAttribute(&quot;noteList&quot;, noteProxy.getPatientNoteByPatientId(patientId));</span>
+<span class="nc" id="L309">            model.addAttribute(&quot;assessment&quot;,assessmentProxy.getAssessmentByPatientId(patientId));</span>
+            try {
+<span class="nc" id="L311">                Patient patient = patientService.findById(patientId);</span>
+<span class="nc" id="L312">                model.addAttribute(&quot;patient&quot;, patient);</span>
+<span class="nc" id="L313">                logger.info(&quot;GET /patient/patHistory/validate for patient id : &quot; + patientId + &quot; OK&quot;);</span>
+<span class="nc" id="L314">            } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L315">                throw new IllegalArgumentException(&quot;Invalid patient Id:&quot; + patientId);</span>
+<span class="nc" id="L316">            }</span>
+<span class="nc" id="L317">            return &quot;patHistory/list&quot;;</span>
+        }
+<span class="nc" id="L319">        logger.error(&quot;GET /patient/update : KO &quot; + result.getAllErrors());</span>
+<span class="nc" id="L320">        return &quot;patHistory/add&quot;;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title> Mediscreen App </title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="border-left">
+      <button type="button" class="btn btn-outline-info">
+        <a href="/home">Home</a>&nbsp
+      </button>
+    </div>
+  </div>
+  <p></p>
+  <p class="display-1 blockquote text-center mb-1 bg-primary lead">List of patients</p>
+  <p></p>
+  <div class="table-responsive">
+    <a class="btn btn-primary btn-sm" href="/patient/add">Add New</a>
+    <p></p>
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>firstName</th>
+        <th>lastName</th>
+        <th>Date of birth</th>
+        <th>Gender</th>
+        <th>Address</th>
+        <th>Phone</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="patient, iStat : ${patientList}" th:style="${iStat.odd}? 'font-weight: normal;'">
+        <td style="width: 10%" th:text="${patient.id}"></td>
+        <td th:text="${patient.firstName}"></td>
+        <td th:text="${patient.lastName}"></td>
+        <td th:text="${patient.birthdate}"></td>
+        <td th:text="${patient.genre}"></td>
+        <td th:text="${patient.address}"></td>
+        <td th:text="${patient.phone}"></td>
+        <td class="margin-right: 5px">
+          <a class="btn btn-info btn-sm" th:href="@{/patient/update/{id}(id=${patient.id})}">Edit</a>
+          <a class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')" th:href="@{/patient/delete/{id}(id=${patient.id})}">Delete</a>
+        </td>
+        <td class="margin-right: 5px">
+          <a class="btn btn-primary btn-sm" th:href="@{/patient/patHistory/list/{id}(id=${patient.id})}">Notes</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

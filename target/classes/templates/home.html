@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title> Mediscreen App </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body th:style="'background: url(/images/background.png) no-repeat center fixed;'">
+    <div sec:authorize="isAuthenticated()">
+        <button type="button" class="btn btn-outline-info">
+            <a href="javascript: document.logoutForm.submit()">Sign out</a>
+            <form method="post" name="logoutForm" th:action="@{/logout}" th:hidden="true">
+                <input hidden type="submit" value="Sign Out" />
+            </form>
+        </button>
+        <div class="container">
+              <p class="display-2 blockquote text-center mb-1 bg-primary lead">WELCOME TO MEDISCREEN HOME PAGE</p>
+
+            <p>
+                <img th:src="@{/images/logo.png}" th:style="'text-align: center;'">
+            </p>
+            <div sec:authorize ="hasAuthority('ADMIN')" >
+                    <a class="btn btn-primary btn-lg" href="/user/list" role="button">User management</a>
+              </div>
+                <br>
+                    <a class="btn btn-primary btn-lg"  href="/patient/list" role="button">Patient list</a>
+                </br>
+        </div>
+    </div>
+</body>
+</html>
+
+

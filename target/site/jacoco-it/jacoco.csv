@@ -1,0 +1,16 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+P9_Patient : Tests d'intégration,com.mediscreen.patient.config,FeignClientConfiguration,0,9,0,0,0,2,0,2,0,2
+P9_Patient : Tests d'intégration,com.mediscreen.patient.config,SpringSecurityConfig,0,98,0,0,0,24,0,4,0,4
+P9_Patient : Tests d'intégration,com.mediscreen.patient.config,PasswordConstraintValidator,0,51,1,3,0,12,1,4,0,3
+P9_Patient : Tests d'intégration,com.mediscreen.patient.web.controller,PatientRestController,102,9,4,0,13,2,4,1,2,1
+P9_Patient : Tests d'intégration,com.mediscreen.patient.web.controller,UserController,153,121,2,2,24,18,7,5,6,4
+P9_Patient : Tests d'intégration,com.mediscreen.patient.web.controller,PatientController,472,83,7,1,81,15,14,3,10,3
+P9_Patient : Tests d'intégration,com.mediscreen.patient.model,Patient,24,125,0,0,9,32,1,17,1,17
+P9_Patient : Tests d'intégration,com.mediscreen.patient.model,User,16,27,0,0,7,12,2,8,2,8
+P9_Patient : Tests d'intégration,com.mediscreen.patient.model,Note,77,0,0,0,21,0,11,0,11,0
+P9_Patient : Tests d'intégration,com.mediscreen.patient.model,Assessment,76,0,0,0,32,0,16,0,16,0
+P9_Patient : Tests d'intégration,com.mediscreen.patient,PatientApplication,5,3,0,0,2,1,1,1,1,1
+P9_Patient : Tests d'intégration,com.mediscreen.patient.service,MyUserDetailsService,46,6,4,0,8,3,3,1,1,1
+P9_Patient : Tests d'intégration,com.mediscreen.patient.service,PatientServiceImpl,5,46,0,0,1,8,1,6,1,6
+P9_Patient : Tests d'intégration,com.mediscreen.patient.service,UserServiceImpl,0,28,0,0,0,8,0,5,0,5
+P9_Patient : Tests d'intégration,com.mediscreen.patient.web.exception,NotFoundException,4,0,0,0,2,0,1,0,1,0

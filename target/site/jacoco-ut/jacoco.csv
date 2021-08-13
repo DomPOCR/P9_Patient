@@ -1,0 +1,16 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+P9_Patient : Tests unitaires,com.mediscreen.patient.config,FeignClientConfiguration,0,9,0,0,0,2,0,2,0,2
+P9_Patient : Tests unitaires,com.mediscreen.patient.config,SpringSecurityConfig,0,98,0,0,0,24,0,4,0,4
+P9_Patient : Tests unitaires,com.mediscreen.patient.config,PasswordConstraintValidator,20,31,3,1,6,6,2,3,0,3
+P9_Patient : Tests unitaires,com.mediscreen.patient.web.controller,PatientRestController,28,83,1,3,3,12,1,4,0,3
+P9_Patient : Tests unitaires,com.mediscreen.patient.web.controller,UserController,40,234,1,3,3,39,4,8,3,7
+P9_Patient : Tests unitaires,com.mediscreen.patient.web.controller,PatientController,106,449,2,6,16,80,2,15,0,13
+P9_Patient : Tests unitaires,com.mediscreen.patient.model,Patient,0,149,0,0,0,41,0,18,0,18
+P9_Patient : Tests unitaires,com.mediscreen.patient.model,User,0,43,0,0,0,19,0,10,0,10
+P9_Patient : Tests unitaires,com.mediscreen.patient.model,Note,4,73,0,0,2,19,1,10,1,10
+P9_Patient : Tests unitaires,com.mediscreen.patient.model,Assessment,46,30,0,0,21,11,13,3,13,3
+P9_Patient : Tests unitaires,com.mediscreen.patient,PatientApplication,5,3,0,0,2,1,1,1,1,1
+P9_Patient : Tests unitaires,com.mediscreen.patient.service,MyUserDetailsService,46,6,4,0,8,3,3,1,1,1
+P9_Patient : Tests unitaires,com.mediscreen.patient.service,PatientServiceImpl,0,51,0,0,0,9,0,7,0,7
+P9_Patient : Tests unitaires,com.mediscreen.patient.service,UserServiceImpl,0,28,0,0,0,8,0,5,0,5
+P9_Patient : Tests unitaires,com.mediscreen.patient.web.exception,NotFoundException,0,4,0,0,0,2,0,1,0,1

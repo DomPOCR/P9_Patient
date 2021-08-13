@@ -1,0 +1,12 @@
+com\mediscreen\patient\UT\PatientControllerTest.class
+com\mediscreen\patient\UT\UserControllerTest$ContextConfiguration.class
+com\mediscreen\patient\UT\PatientServiceTest.class
+com\mediscreen\patient\UT\UserControllerTest.class
+com\mediscreen\patient\UT\UserServiceTest.class
+com\mediscreen\patient\IT\PatientControllerTestIT.class
+com\mediscreen\patient\UT\PatientRestControllerTest.class
+com\mediscreen\patient\IT\UserControllerTestIT.class
+com\mediscreen\patient\PatientApplicationTests.class
+com\mediscreen\patient\UT\PatientControllerTest$ContextConfiguration.class
+com\mediscreen\patient\IT\PatientDaoTestIT.class
+com\mediscreen\patient\UT\PatientRestControllerTest$ContextConfiguration.class

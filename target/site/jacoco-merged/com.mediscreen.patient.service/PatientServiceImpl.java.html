@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">P9_Patient : Fusion tests unitaires et d'intégration</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.patient.service</a> &gt; <span class="el_source">PatientServiceImpl.java</span></div><h1>PatientServiceImpl.java</h1><pre class="source lang-java linenums">package com.mediscreen.patient.service;
+
+import com.mediscreen.patient.dao.PatientDao;
+import com.mediscreen.patient.model.Patient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+
+@Service
+public class PatientServiceImpl implements PatientService {
+
+    private final PatientDao patientDao;
+
+    @Autowired
+<span class="fc" id="L17">    public PatientServiceImpl(PatientDao patientDao) {</span>
+<span class="fc" id="L18">        this.patientDao = patientDao;</span>
+<span class="fc" id="L19">    }</span>
+
+    @Override
+    public Patient findById(int id) throws NoSuchElementException {
+<span class="fc" id="L23">        return patientDao.findById(id).orElseThrow(() -&gt; new NoSuchElementException(&quot;The patient id : &quot; + id + &quot; does not exist&quot;));</span>
+    }
+
+    @Override
+    public List&lt;Patient&gt; findAll() {
+<span class="fc" id="L28">        return patientDao.findAll();</span>
+    }
+
+    @Override
+    public List&lt;Patient&gt; findByFamilyName(String familyName) {
+<span class="fc" id="L33">        return patientDao.findByLastName(familyName);</span>
+    }
+
+
+    @Override
+    public Patient savePatient(Patient patient) {
+<span class="fc" id="L39">        return patientDao.save(patient);</span>
+    }
+
+    @Override
+    public Patient deletePatient(Patient patient) {
+<span class="fc" id="L44">        patientDao.delete(patient);</span>
+<span class="fc" id="L45">        return patient;</span>
+    }
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

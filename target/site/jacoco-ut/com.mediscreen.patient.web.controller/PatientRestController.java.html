@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientRestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">P9_Patient : Tests unitaires</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.patient.web.controller</a> &gt; <span class="el_source">PatientRestController.java</span></div><h1>PatientRestController.java</h1><pre class="source lang-java linenums">package com.mediscreen.patient.web.controller;
+
+import com.mediscreen.patient.model.Patient;
+import com.mediscreen.patient.service.PatientService;
+import com.mediscreen.patient.web.exception.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+
+@CrossOrigin(origins = &quot;*&quot;)
+@RestController
+<span class="fc" id="L17">public class PatientRestController {</span>
+
+    // Pour le log4j2
+<span class="fc" id="L20">    final Logger logger = LogManager.getLogger(this.getClass().getName());</span>
+
+    @Autowired
+    private PatientService patientService;
+
+    // Patient par id
+
+    /**
+     *
+     * @param id Patient Id
+     * @return patient
+     * @throws NotFoundException if patient not found
+     */
+
+    @GetMapping(value = &quot;/patient/{id}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public Patient getPatientById(@PathVariable Integer id) throws NotFoundException {
+
+        Patient resultPatient;
+        try {
+<span class="fc" id="L40">            resultPatient = patientService.findById(id);</span>
+<span class="nc" id="L41">        } catch (NoSuchElementException e) {</span>
+<span class="nc" id="L42">            logger.warn(&quot;The patient id : &quot; + id + &quot; does not exist&quot;);</span>
+<span class="nc" id="L43">            throw new NotFoundException(&quot;The patient whith id : &quot; + id + &quot; does not exist&quot;);</span>
+<span class="fc" id="L44">        }</span>
+<span class="fc" id="L45">        logger.info(&quot;getPatientById &quot; + id + &quot; Ok&quot;);</span>
+<span class="fc" id="L46">        return resultPatient;</span>
+    }
+    // Liste des patients par nom de famille
+
+    /**
+     *
+     * @param familyName Name of family
+     * @return patient list
+     * @throws NotFoundException if family name not exist
+     */
+    @GetMapping(value = &quot;/patient/familyname/{familyName}&quot;)
+    @ResponseStatus(HttpStatus.OK)
+    public List&lt;Patient&gt; getPatientByFamilyName(@PathVariable String familyName) throws NotFoundException {
+
+<span class="fc" id="L60">        List&lt;Patient&gt; resultPatient = patientService.findByFamilyName(familyName);</span>
+<span class="pc bpc" id="L61" title="1 of 4 branches missed.">        if ((resultPatient == null) || (resultPatient.size() == 0)) {</span>
+<span class="fc" id="L62">            logger.warn(&quot;The patient whith family name : &quot; + familyName + &quot; does not exist&quot;);</span>
+<span class="fc" id="L63">            throw new NotFoundException(&quot;The patient whith family name : &quot; + familyName + &quot; does not exist&quot;);</span>
+        }
+<span class="fc" id="L65">        logger.info(&quot;getPatientByFamilyName &quot; + familyName + &quot; Ok&quot;);</span>
+<span class="fc" id="L66">        return resultPatient;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

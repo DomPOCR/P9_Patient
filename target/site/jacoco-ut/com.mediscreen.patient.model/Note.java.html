@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Note.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">P9_Patient : Tests unitaires</a> &gt; <a href="index.source.html" class="el_package">com.mediscreen.patient.model</a> &gt; <span class="el_source">Note.java</span></div><h1>Note.java</h1><pre class="source lang-java linenums">package com.mediscreen.patient.model;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+
+public class Note {
+
+    private String id;
+
+    private String textNote;
+
+    private Integer patientId;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate dateNote ;
+
+<span class="fc" id="L18">    public Note() {</span>
+<span class="fc" id="L19">    }</span>
+
+<span class="fc" id="L21">    public Note(String id, String textNote, Integer patientId, LocalDate dateNote) {</span>
+<span class="fc" id="L22">        this.id = id;</span>
+<span class="fc" id="L23">        this.textNote = textNote;</span>
+<span class="fc" id="L24">        this.patientId = patientId;</span>
+<span class="fc" id="L25">        this.dateNote = dateNote;</span>
+<span class="fc" id="L26">    }</span>
+
+    public String getId() {
+<span class="fc" id="L29">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="fc" id="L33">        this.id = id;</span>
+<span class="fc" id="L34">    }</span>
+
+    public String getTextNote() {
+<span class="fc" id="L37">        return textNote;</span>
+    }
+
+    public void setTextNote(String textNote) {
+<span class="nc" id="L41">        this.textNote = textNote;</span>
+<span class="nc" id="L42">    }</span>
+
+    public Integer getPatientId() {
+<span class="fc" id="L45">        return patientId;</span>
+    }
+
+    public void setPatientId(Integer patientId) {
+<span class="fc" id="L49">        this.patientId = patientId;</span>
+<span class="fc" id="L50">    }</span>
+
+    public LocalDate getDateNote() {
+<span class="fc" id="L53">        return dateNote;</span>
+    }
+
+    public void setDateNote(LocalDate dateNote) {
+<span class="fc" id="L57">        this.dateNote = dateNote;</span>
+<span class="fc" id="L58">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L62">        return &quot;Note{&quot; +</span>
+                &quot;id='&quot; + id + '\'' +
+                &quot;, textNote='&quot; + textNote + '\'' +
+                &quot;, patientId=&quot; + patientId +
+                &quot;, dateNote=&quot; + dateNote +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

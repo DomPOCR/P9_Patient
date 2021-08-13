@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body marginwidth="0" marginheight="0">
+<div class="container">
+    <div class="row">
+        <div class="border-left">
+            <button type="button" class="btn btn-outline-info">
+                <a href="/home">Home</a>&nbsp
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <h1>MEDISCREEN Error Page</h1>
+    </div>
+    <div class="row">Page doesn't exist</div>
+    <div class="row rowDesign">
+        <div class="col-md-4 ml-auto">
+            <span class="legend">Date</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${timestamp}"></span>
+        </div>
+    </div>
+    <div class="row rowDesign">
+        <div class="col-md-4 ml-auto">
+            <span class="legend">Path</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${path}"></span>
+        </div>
+    </div>
+    <div class="row rowDesign">
+        <div class="col-md-4 ml-auto">
+            <span class="legend">Error</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${error}"></span>
+        </div>
+    </div>
+    <div class="row rowDesign">
+        <div class="col-md-4 ml-auto">
+            <span class="legend">Status</span>
+        </div>
+        <div class="col-md-8">
+            <span th:text="${status}"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
